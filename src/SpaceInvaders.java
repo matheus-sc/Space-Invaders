@@ -5,6 +5,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -13,29 +15,35 @@ import java.awt.Insets;
 public class SpaceInvaders extends JFrame {
     // Botão para iniciar o jogo
     private JButton iniciar;
-    ImageIcon imagemFundo = new ImageIcon("assets/Fundo.png");
+    private JLabel imagemFundo = new JLabel();
 
     // Criação do JFrame
     public SpaceInvaders() {
-        setTitle("Space Invaders");  // Título do Frame
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Comportamento da opção de fechar
-        setSize(1920, 1080);  // Tamanho da janela (full screen)
-        setLayout(new GridBagLayout());  // Criando o Frame através do layout GridBagLayout da biblioteca awt
-
-        // Criando um objeto gbc da classe GridBagConstraints para definir as margens internas do objeto
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-
-        JLabel labelFundo = new JLabel(imagemFundo);
-        add(labelFundo);
-
-        iniciar = new JButton("Iniciar");
-        add(iniciar);
+        setTitle("Space Invaders");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+        setSize(1920, 1080);
     
+        iniciar = new JButton("Iniciar");
+        // iniciar.addActionListener(new IniciarJogo(this));
+        getContentPane().add(iniciar);
+        iniciar.setSize(1, 50);
+        iniciar.setBounds(850, 540, 260, 23);
+
+        imagemFundo.setIcon(new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Fundo.png"));
+        getContentPane().add(imagemFundo);
+        imagemFundo.setBounds(0, 0, 1920, 1080);
+    
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
         setVisible(true);
     }
 
     public static void main(String[] args) {
-        new SpaceInvaders();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new SpaceInvaders().setVisible(true);
+            }
+        });
     }
 }
