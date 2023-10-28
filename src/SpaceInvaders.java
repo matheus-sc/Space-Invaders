@@ -1,21 +1,28 @@
 package src;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.File;
+import java.io.IOException;
 
 // Classe principal que contém a janela inicial para iniciar o jogo
 public class SpaceInvaders extends JFrame {
     // Botão para iniciar o jogo
     private JButton iniciar;
-    private JLabel imagemFundo = new JLabel();
+    private JLabel imagemFundo = new JLabel(), logo = new JLabel();
 
     // Criação do JFrame
     public SpaceInvaders() {
@@ -23,12 +30,33 @@ public class SpaceInvaders extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
         setSize(1920, 1080);
-    
-        iniciar = new JButton("Iniciar");
-        // iniciar.addActionListener(new IniciarJogo(this));
+     
+        /*
+        try {
+            File fontFile = new File("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\fonts\\space_invaders.ttf");
+            Font space_invaders = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(space_invaders);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        */
+        
+        iniciar = new JButton("INICIAR");
+        iniciar.setFont(new Font("sansSerif", 1, 30));
+        iniciar.setForeground(Color.RED);
+        iniciar.setBackground(Color.YELLOW);
+        iniciar.setBounds(820, 740, 300, 30);
+        iniciar.setHorizontalAlignment(SwingConstants.CENTER);
+        iniciar.setFocusPainted(false); 
         getContentPane().add(iniciar);
-        iniciar.setSize(1, 50);
-        iniciar.setBounds(850, 540, 260, 23);
+        
+
+        logo.setIcon(new javax.swing.ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Logo.png")); // NOI18N
+        getContentPane().add(logo);
+        logo.setBounds(500, 100, 1100, 530);
 
         imagemFundo.setIcon(new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Fundo.png"));
         getContentPane().add(imagemFundo);
