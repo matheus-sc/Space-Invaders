@@ -1,6 +1,5 @@
 package src;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,11 +9,7 @@ import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
 
@@ -23,6 +18,7 @@ public class SpaceInvaders extends JFrame {
     // Botão para iniciar o jogo
     private JButton iniciar;
     private JLabel imagemFundo = new JLabel(), logo = new JLabel();
+    private Font space_invaders;
 
     // Criação do JFrame
     public SpaceInvaders() {
@@ -31,21 +27,20 @@ public class SpaceInvaders extends JFrame {
         getContentPane().setLayout(null);
         setSize(1920, 1080);
      
-        /*
         try {
-            File fontFile = new File("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\fonts\\space_invaders.ttf");
-            Font space_invaders = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+            space_invaders = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/humanoid.regular.ttf")).deriveFont(40f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(space_invaders);
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fonts/humanoid.regular.ttf")));
         } catch (FontFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        */
         
         iniciar = new JButton("INICIAR");
-        iniciar.setFont(new Font("sansSerif", 1, 30));
+        iniciar.setFont(space_invaders);
         iniciar.setForeground(Color.RED);
         iniciar.setBackground(Color.YELLOW);
         iniciar.setBounds(820, 740, 300, 30);
