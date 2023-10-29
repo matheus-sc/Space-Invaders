@@ -10,6 +10,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -17,7 +19,7 @@ import java.io.IOException;
 public class SpaceInvaders extends JFrame {
     // Botão para iniciar o jogo
     private JButton iniciar;
-    private JLabel imagemFundo = new JLabel(), logo = new JLabel();
+    private JLabel imagemFundo, logo;
     private Font space_invaders;
 
     // Criação do JFrame
@@ -31,14 +33,22 @@ public class SpaceInvaders extends JFrame {
             space_invaders = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/humanoid.regular.ttf")).deriveFont(40f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fonts/humanoid.regular.ttf")));
-        } catch (FontFormatException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (FontFormatException | IOException e) {
+            System.out.println("Erro ao carregar fontes!");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Erro inesperado!");;
         }
         
+        logo = new JLabel();
+        logo.setIcon(new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Logo.png")); // NOI18N
+        getContentPane().add(logo);
+        logo.setBounds(500, 100, 1100, 530);
+
+        imagemFundo = new JLabel();
+        imagemFundo.setIcon(new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Fundo.png"));
+        getContentPane().add(imagemFundo);
+        imagemFundo.setBounds(0, 0, 1920, 1080);
+
         iniciar = new JButton("INICIAR");
         iniciar.setFont(space_invaders);
         iniciar.setForeground(Color.RED);
@@ -47,26 +57,29 @@ public class SpaceInvaders extends JFrame {
         iniciar.setHorizontalAlignment(SwingConstants.CENTER);
         iniciar.setFocusPainted(false); 
         getContentPane().add(iniciar);
-        
-
-        logo.setIcon(new javax.swing.ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Logo.png")); // NOI18N
-        getContentPane().add(logo);
-        logo.setBounds(500, 100, 1100, 530);
-
-        imagemFundo.setIcon(new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Fundo.png"));
-        getContentPane().add(imagemFundo);
-        imagemFundo.setBounds(0, 0, 1920, 1080);
+        iniciar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                iniciarJogo();
+            }
+        });
     
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setUndecorated(true);
         setVisible(true);
     }
 
+    public void iniciarJogo() {
+        JFrame janela = new JFrame("Space Invaders");
+        janela.setTitle("Space Invaders");
+        janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        janela.setSize(1920, 1080);
+        janela.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        janela.setUndecorated(true);
+        janela.add(new Gameplay());
+        janela.setVisible(true);
+        setVisible(false);
+    }
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SpaceInvaders().setVisible(true);
-            }
-        });
+        new SpaceInvaders();
     }
 }
