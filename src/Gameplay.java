@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 public class Gameplay extends JPanel implements KeyListener {
     private JLabel imagemFundo;
     private Player player;
+    private AlienFraco alienFraco;
 
     public Gameplay() {
         setLayout(null);
@@ -21,8 +22,14 @@ public class Gameplay extends JPanel implements KeyListener {
 
         player = new Player(100);
         add(player);
-        player.setBounds(950, 950, 60, 30);
+        player.setSize(60, 30);
+        player.setLocation(950, 950);
         setComponentZOrder(player, 0);
+
+        alienFraco = new AlienFraco(30);
+        add(alienFraco);
+        alienFraco.setBounds(400, 400, 40, 32);
+        setComponentZOrder(alienFraco, 0);
 
         addKeyListener(this);
         setFocusable(true);
@@ -30,8 +37,17 @@ public class Gameplay extends JPanel implements KeyListener {
 
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_LEFT) player.moverEsquerda();
-        else if (keyCode == KeyEvent.VK_RIGHT) player.moverDireita();
+        switch (keyCode) {
+            case KeyEvent.VK_SPACE:
+                player.atirar(10, 10, 500);
+                break;
+            case KeyEvent.VK_LEFT:
+                player.moverEsquerda();
+                break;
+            case KeyEvent.VK_RIGHT:
+                player.moverDireita();
+                break;
+        }
     }
 
     public void keyTyped(KeyEvent e) {}

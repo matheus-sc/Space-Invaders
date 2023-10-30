@@ -7,9 +7,17 @@ public interface Nave {
 
     public boolean estaMorto();
 
-    public void atirar();
+    public void atirar(int dano, int velocidade, int cooldown);
 
     public void moverEsquerda();
 
     public void moverDireita();
+
+    public int getX();
+
+    public int getY();
+
+    public int getWidth();
+
+    public int getHeight();
 }
