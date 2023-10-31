@@ -10,13 +10,16 @@ import javax.swing.JLabel;
 import javax.swing.Timer;
 
 public class AlienFraco extends JLabel implements Nave {
-    private int vida;  // Vida do player
+    private int vida, velocidade, largura, altura;  // Vida do player
     private ImageIcon sprite;  // Sprite do player
     private boolean podeAtirar = true;
 
-    public AlienFraco(int vida) {
+    public AlienFraco(int vida, int velocidade) {
         this.vida = vida;
+        this.velocidade = velocidade;
 
+        largura = 40;
+        altura = 32;
         sprite = new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\AlienFraco.png");
     }
 
@@ -35,6 +38,14 @@ public class AlienFraco extends JLabel implements Nave {
 
     public int getVida() {
         return vida;
+    }
+
+    public int getLargura() {
+        return largura;
+    }
+
+    public int getAltura() {
+        return altura;
     }
 
     public boolean estaMorto() {
@@ -92,11 +103,11 @@ public class AlienFraco extends JLabel implements Nave {
 
     public void moverEsquerda() {
         int x = getX();
-        if (x > 0) setLocation(x - 10, getY());
+        if (x > 0) setLocation(x - velocidade, getY());
     }
 
     public void moverDireita() {
         int x = getX();
-        if (x < getParent().getWidth() - getWidth()) setLocation(x + 10, getY());
+        if (x < getParent().getWidth() - getWidth()) setLocation(x + velocidade, getY());
     }
 }

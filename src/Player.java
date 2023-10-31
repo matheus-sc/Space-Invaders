@@ -70,8 +70,6 @@ public class Player extends JLabel implements Nave {
                 disparo.setLocation(x, newY);
                 disparo.repaint();
     
-                System.out.println("Posição Y do disparo: " + disparo.getY());
-                System.out.println("Tamanho da janela: " + getParent().getHeight());
                 // Checa se o disparo chegou ao topo da tela
                 if (disparo.getY() < 0) {
                     getParent().remove(disparo);
