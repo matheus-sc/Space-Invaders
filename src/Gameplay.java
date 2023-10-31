@@ -1,40 +1,51 @@
 package src;
 
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class Gameplay extends JPanel implements KeyListener {
-    private JLabel imagemFundo;
-    private Player player;
-    private AlienFraco alienFraco;
+    private JLabel imagemFundo;  // Criação do JLabel para a imagem de fundo
+    private Player player;  // Criação do player
+    private AlienFraco alienFraco;  // Criação do alien fraco
 
     public Gameplay() {
-        setLayout(null);
+        setLayout(null);  // Layout do JPanel nulo
 
+        // Criação do JLabel para a imagem de fundo
         imagemFundo = new JLabel();
         imagemFundo.setIcon(new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Fundo.png"));
         add(imagemFundo);
         imagemFundo.setBounds(0, 0, 1920, 1080);
 
+        // Criação do player
         player = new Player(100);
         add(player);
         player.setSize(60, 30);
         player.setLocation(950, 950);
         setComponentZOrder(player, 0);
 
+        // Criação do alien fraco
         alienFraco = new AlienFraco(30);
         add(alienFraco);
-        alienFraco.setBounds(400, 400, 40, 32);
+        alienFraco.setSize(40, 32);
+        alienFraco.setLocation(950, 0);
         setComponentZOrder(alienFraco, 0);
 
-        addKeyListener(this);
-        setFocusable(true);
+        addKeyListener(this); // Adiciona o KeyListener ao JPanel para capturar os eventos de teclado
+        setFocusable(true); 
+        new Timer(10, actionListener).start();
     }
 
+    // Método para capturar os eventos de teclado (seta esquerda, seta direita e espaço)
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
@@ -50,6 +61,24 @@ public class Gameplay extends JPanel implements KeyListener {
         }
     }
 
+    ActionListener actionListener = new ActionListener() {
+        public void actionPerformed(ActionEvent actionEvent) {
+            for (Component componente : getComponents()) {
+                if (componente instanceof Disparo) {
+                    if(((Disparo) componente).seColidiu(alienFraco)) {
+                        if (Arrays.asList(getComponents()).contains(alienFraco) && ((Disparo) componente).seColidiu(alienFraco)) {
+                            remove(componente);
+                            remove(alienFraco);
+                            revalidate();
+                            repaint();
+                        }
+                    }
+                } 
+            }
+        }
+    };
+
+    // Métodos não utilizados, mas necessários para poder implementar o KeyListener
     public void keyTyped(KeyEvent e) {}
 
     public void keyReleased(KeyEvent e) {}

@@ -1,5 +1,6 @@
 package src;
 
+// Interface para as naves do jogo (player e aliens)
 public interface Nave {
     public void setVida(int vida);
 

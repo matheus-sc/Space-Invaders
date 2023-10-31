@@ -1,7 +1,10 @@
 package src;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -10,18 +13,21 @@ public class Disparo extends JLabel{
     private int dano, velocidade, cooldown;
     private ImageIcon sprite;
 
-    public Disparo(int dano, int velocidade, int cooldown) {
+    public Disparo(int dano, int velocidade, int cooldown, String spritePath) {
         this.dano = dano;
         this.velocidade = velocidade;
         this.cooldown = cooldown;
 
-        sprite = new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Tiro.png");
+        sprite = new ImageIcon(spritePath);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(sprite.getImage(), 0, 0, null);
+
+        g.setColor(Color.RED);
+        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
     }
 
     public int getVelocidade() {
@@ -32,9 +38,12 @@ public class Disparo extends JLabel{
         return cooldown;
     }
 
-    public void seColidiu(Nave nave) {
-        Rectangle hitBoxDisparo = new Rectangle(getX(), getY(), getWidth(), getHeight());
-        Rectangle hitBoxNave = new Rectangle(nave.getX(), nave.getY(), nave.getWidth(), nave.getHeight());
-        if (hitBoxDisparo.intersects(hitBoxNave)) nave.setVida(nave.getVida() - dano);
+    public boolean seColidiu(AlienFraco inimigos) {
+        Rectangle disparo = new Rectangle(getX(), getY(), getWidth(), getHeight());
+        Rectangle inimigo = new Rectangle(inimigos.getX(), inimigos.getY(), inimigos.getWidth(), inimigos.getHeight());
+        if (disparo.intersects(inimigo)) {
+            return true;
+        }
+        return false;
     }
 }

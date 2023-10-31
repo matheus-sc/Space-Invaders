@@ -17,18 +17,18 @@ import java.io.IOException;
 
 // Classe principal que contém a janela inicial para iniciar o jogo
 public class SpaceInvaders extends JFrame {
-    // Botão para iniciar o jogo
-    private JButton iniciar;
-    private JLabel imagemFundo, logo;
-    private Font space_invaders;
+    private JButton iniciar;  // Botão para iniciar o jogo
+    private JLabel imagemFundo, logo;  // Criação dos JLabels para a imagem de fundo e logo
+    private Font space_invaders;  // Fonte do jogo
 
     // Criação do JFrame
     public SpaceInvaders() {
-        setTitle("Space Invaders");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().setLayout(null);
-        setSize(1920, 1080);
+        setTitle("Space Invaders");  // Título da janela
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Ação ao fechar a janela
+        getContentPane().setLayout(null);  // Layout da janela nulo
+        setSize(1920, 1080);  // Tamanho da janela
      
+        // Carregamento da fonte
         try {
             space_invaders = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/humanoid.regular.ttf")).deriveFont(40f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -39,6 +39,7 @@ public class SpaceInvaders extends JFrame {
             System.out.println("Erro inesperado!");;
         }
         
+        // Criação dos JLabels
         logo = new JLabel();
         logo.setIcon(new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Logo.png")); // NOI18N
         getContentPane().add(logo);
@@ -49,6 +50,7 @@ public class SpaceInvaders extends JFrame {
         getContentPane().add(imagemFundo);
         imagemFundo.setBounds(0, 0, 1920, 1080);
 
+        // Criação do botão iniciar
         iniciar = new JButton("INICIAR");
         iniciar.setFont(space_invaders);
         iniciar.setForeground(Color.RED);
@@ -63,11 +65,13 @@ public class SpaceInvaders extends JFrame {
             }
         });
     
+        // Configurações da janela em fullscreen
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setUndecorated(true);
         setVisible(true);
     }
 
+    // Método para iniciar o jogo
     public void iniciarJogo() {
         JFrame janela = new JFrame("Space Invaders");
         janela.setTitle("Space Invaders");
@@ -80,6 +84,6 @@ public class SpaceInvaders extends JFrame {
         setVisible(false);
     }
     public static void main(String[] args) {
-        new SpaceInvaders();
+        new SpaceInvaders();  // Criação do objeto SpaceInvaders (inicia o jogo)
     }
 }
