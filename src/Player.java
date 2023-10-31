@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.Timer;
 import javax.swing.ImageIcon;
@@ -32,18 +31,6 @@ public class Player extends JLabel implements Nave {
     }
 
     // Métodos da interface Nave para retornar a posição e o tamanho do player
-    public int getX() {
-        return super.getX();
-    }
-    public int getY() {
-        return super.getY();
-    }
-    public int getWidth() {
-        return super.getWidth();
-    }
-    public int getHeight() {
-        return super.getHeight();
-    }
 
     // Métodos da interface Nave para controlar a vida do player
     public void setVida(int vida) {

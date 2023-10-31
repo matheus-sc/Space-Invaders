@@ -34,7 +34,7 @@ public class Gameplay extends JPanel implements KeyListener {
         setComponentZOrder(player, 0);
 
         // Criação do alien fraco
-        alienFraco = new AlienFraco(30);
+        alienFraco = new AlienFraco(10);
         add(alienFraco);
         alienFraco.setSize(40, 32);
         alienFraco.setLocation(950, 0);
@@ -42,7 +42,7 @@ public class Gameplay extends JPanel implements KeyListener {
 
         addKeyListener(this); // Adiciona o KeyListener ao JPanel para capturar os eventos de teclado
         setFocusable(true); 
-        new Timer(10, actionListener).start();
+        new Timer(10, checaColisao).start();
     }
 
     // Método para capturar os eventos de teclado (seta esquerda, seta direita e espaço)
@@ -50,7 +50,7 @@ public class Gameplay extends JPanel implements KeyListener {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_SPACE:
-                player.atirar(10, 10, 500);
+                player.atirar(10, 30, 500);
                 break;
             case KeyEvent.VK_LEFT:
                 player.moverEsquerda();
@@ -61,17 +61,16 @@ public class Gameplay extends JPanel implements KeyListener {
         }
     }
 
-    ActionListener actionListener = new ActionListener() {
+    ActionListener checaColisao = new ActionListener() {
         public void actionPerformed(ActionEvent actionEvent) {
             for (Component componente : getComponents()) {
                 if (componente instanceof Disparo) {
-                    if(((Disparo) componente).seColidiu(alienFraco)) {
-                        if (Arrays.asList(getComponents()).contains(alienFraco) && ((Disparo) componente).seColidiu(alienFraco)) {
-                            remove(componente);
-                            remove(alienFraco);
-                            revalidate();
-                            repaint();
-                        }
+                    if(Arrays.asList(getComponents()).contains(alienFraco) && ((Disparo) componente).seColidiu(alienFraco)) {
+                        alienFraco.setVida(alienFraco.getVida() - ((Disparo) componente).getDano());
+                        remove(componente);
+                        if(alienFraco.estaMorto()) remove(alienFraco);
+                        revalidate();
+                        repaint();
                     }
                 } 
             }

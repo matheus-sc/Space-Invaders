@@ -3,8 +3,6 @@ package src;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -28,6 +26,10 @@ public class Disparo extends JLabel{
 
         g.setColor(Color.RED);
         g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+    }
+
+    public int getDano() {
+        return dano;
     }
 
     public int getVelocidade() {

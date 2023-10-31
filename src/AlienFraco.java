@@ -29,22 +29,6 @@ public class AlienFraco extends JLabel implements Nave {
         g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
     }
 
-    public int getX() {
-        return super.getX();
-    }
-
-    public int getY() {
-        return super.getY();
-    }
-
-    public int getWidth() {
-        return super.getWidth();
-    }
-
-    public int getHeight() {
-        return super.getHeight();
-    }
-
     public void setVida(int vida) {
         this.vida = vida;
     }
@@ -54,7 +38,8 @@ public class AlienFraco extends JLabel implements Nave {
     }
 
     public boolean estaMorto() {
-        return true;
+        if (vida <= 0) return true;
+        return false;
     }
 
     public void atirar(int dano, int velocidade, int cooldown) {
