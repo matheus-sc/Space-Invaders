@@ -10,8 +10,8 @@ public class AlienFraco extends Nave {
        setSprite("assets/AlienFraco.png");
     }
 
-    public void atirar(int dano, int velocidade, int cooldown) {
-        
+    public boolean atirar(int dano, int velocidade, int cooldown) {
+        return false;
     }
 
     public void moverEsquerda() {

@@ -43,12 +43,12 @@ public class SpaceInvaders extends JFrame {
         
         // Criação dos JLabels
         logo = new JLabel();
-        logo.setIcon(new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Logo.png")); // NOI18N
+        logo.setIcon(new ImageIcon("assets/Logo.png")); // NOI18N
         getContentPane().add(logo);
         logo.setBounds(500, 100, 1100, 530);
 
         imagemFundo = new JLabel();
-        imagemFundo.setIcon(new ImageIcon("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Fundo.png"));
+        imagemFundo.setIcon(new ImageIcon("assets/Fundo.png"));
         getContentPane().add(imagemFundo);
         imagemFundo.setBounds(0, 0, 1920, 1080);
 

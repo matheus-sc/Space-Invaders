@@ -10,8 +10,8 @@ public class AlienMedio extends Nave {
        setSprite("assets/AlienMedio.png");
     }
 
-    public void atirar(int dano, int velocidade, int cooldown) {
-        
+    public boolean atirar(int dano, int velocidade, int cooldown) {
+        return false;
     }
 
     public void sofreuDano() {

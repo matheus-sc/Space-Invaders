@@ -12,7 +12,7 @@ public class Fundo {
 
     public Fundo() {
         try {
-            sprite = ImageIO.read(new File("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Fundo.png"));
+            sprite = ImageIO.read(new File("assets/Fundo.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
