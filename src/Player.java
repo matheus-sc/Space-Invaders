@@ -11,7 +11,7 @@ public class Player extends Nave {
 
         setX(950);  // Inicializa a posição x do player
         setY(900);;  // Inicializa a posição y do player
-        setSprite("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\Jogador.png");  // Inicializa o sprite do player
+        setSprite("assets/Jogador.png");  // Inicializa o sprite do player
 
     }
 

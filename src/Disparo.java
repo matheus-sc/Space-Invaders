@@ -38,7 +38,7 @@ public class Disparo {
         y = atirador.getY() + atirador.getHeight() / 2 - 30;
 
         try {
-            sprite = ImageIO.read(new File("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\TiroPlayer.png"));
+            sprite = ImageIO.read(new File("assets/TiroPlayer.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
