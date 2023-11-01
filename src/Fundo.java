@@ -12,7 +12,8 @@ public class Fundo {
 
     public Fundo() {
         try {
-            sprite = ImageIO.read(new File("assets/Fundo.png"));
+            File file = new File("assets\\Fundo.png");
+            sprite = ImageIO.read(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -25,5 +26,9 @@ public class Fundo {
 
     public int getWidth() {
         return sprite.getWidth(null);
+    }
+
+    public int getHeight() {
+        return sprite.getHeight(null);
     }
 }

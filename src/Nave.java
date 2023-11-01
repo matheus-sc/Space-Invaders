@@ -88,6 +88,10 @@ public abstract class Nave {
         return fundo.getWidth();
     }
 
+    public int getFundoHeight() {
+        return fundo.getHeight();
+    }
+
     public boolean estaMorto() {
         if (vida <= 0) {
             return true;

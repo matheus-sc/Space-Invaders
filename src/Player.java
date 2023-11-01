@@ -9,10 +9,11 @@ public class Player extends Nave {
     public Player(int vida) {
         setVida(vida);  // Inicializa a vida do player
 
-        setX(950);  // Inicializa a posição x do player
-        setY(900);;  // Inicializa a posição y do player
         setSprite("assets/Jogador.png");  // Inicializa o sprite do player
-
+        int playerX = (getFundoWidth() - getWidth()) / 2;
+        int playerY = getFundoHeight() - getHeight() - 50;
+        setX(playerX);
+        setY(playerY);
     }
 
     // Método da interface Nave para controlar o disparo do player

@@ -26,9 +26,9 @@ public class Gameplay extends JPanel implements KeyListener {
         player = new Player(10);
 
         aliens = new ArrayList<Nave>();
-        int espacoHorizontal = 50;  // The width of an alien
-        int espacoVertical = 50;  // The height of an alien
-        int padding = 10;  // The space between aliens
+        int espacoHorizontal = 50; 
+        int espacoVertical = 50; 
+        int padding = 10; 
 
         for (int linha = 0; linha < 5; linha++) {
             for (int col = 0; col < 10; col++) {
@@ -39,10 +39,10 @@ public class Gameplay extends JPanel implements KeyListener {
                 } else if (linha <= divisao * 2) {
                     alien = new AlienMedio();
                 } else {
-                    alien = new AlienForte();  // Strong aliens are now at the top and every row after the third
+                    alien = new AlienForte(); 
                 }
         
-                // Calculate the x and y coordinates
+                
                 int x = col * (espacoHorizontal + padding) + 600;
                 int y = linha * (espacoVertical + padding) + 200;
         
