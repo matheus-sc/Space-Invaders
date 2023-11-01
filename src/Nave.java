@@ -19,9 +19,6 @@ public abstract class Nave {
 
     public void draw(Graphics g) {
         g.drawImage(getSprite(), x, y, null);
-
-        g.setColor(Color.RED);
-        g.drawRect(x, y, getWidth() - 1, getHeight() - 1);
     }
     
     public void setVida(int vida) {

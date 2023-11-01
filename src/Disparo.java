@@ -1,6 +1,5 @@
 package src;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -78,9 +77,6 @@ public class Disparo {
 
     public void draw(Graphics g) {
         g.drawImage(sprite, x, y, null);
-
-        g.setColor(Color.RED);
-        g.drawRect(x, y, getWidth() - 1, getHeight() - 1);
     }
 
     public boolean seColidiu(ArrayList<Nave> inimigos) {
@@ -98,7 +94,11 @@ public class Disparo {
         return false;
     }
 
-    public void mover() {
+    public void moverCima() {
         y -= velocidade;
+    }
+
+    public void moverBaixo() {
+        y += velocidade;
     }
 }

@@ -1,5 +1,10 @@
 package src;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Timer;
+
 public class AlienMedio extends Nave {
     private int velocidade;
 
@@ -11,7 +16,21 @@ public class AlienMedio extends Nave {
     }
 
     public boolean atirar(int dano, int velocidade, int cooldown) {
-        return false;
+        if (!getPodeAtirar()) {
+            return false;
+        }
+
+        Disparo disparo = new Disparo(dano, velocidade, cooldown, "assets/TiroMedio.png", this);
+        setDisparos(disparo);
+        setPodeAtirar(false);
+        Timer timer = new Timer(cooldown, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setPodeAtirar(true);
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
+        return true;
     }
 
     public void sofreuDano() {

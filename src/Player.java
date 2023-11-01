@@ -2,6 +2,7 @@ package src;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.Timer;
 
 public class Player extends Nave {
@@ -16,7 +17,6 @@ public class Player extends Nave {
         setY(playerY);
     }
 
-    // Método da interface Nave para controlar o disparo do player
     public boolean atirar(int dano, int velocidade, int cooldown) {
         if (!getPodeAtirar()) {
             return false;
