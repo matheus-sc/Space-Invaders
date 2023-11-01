@@ -56,6 +56,7 @@ public class Gameplay extends JPanel implements KeyListener {
         
         new Timer(100, movimentoAliens).start();
         new Timer(100, movimentoDisparo).start();
+        new Timer(10, checaColisao).start();
     }
 
     @Override
@@ -90,6 +91,17 @@ public class Gameplay extends JPanel implements KeyListener {
         repaint();
         revalidate();
     }
+
+    ActionListener checaColisao = new ActionListener() {
+        public void actionPerformed(ActionEvent actionEvent) {
+            for (Disparo disparo : player.getDisparos()) {
+                if (disparo.seColidiu(aliens)) {
+                    player.getDisparos().remove(disparo);
+                    break;
+                }
+            }
+        }    
+    };
 
     boolean direcaoFracos = false;
     boolean direcaoMedios = false;

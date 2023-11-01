@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -79,13 +80,22 @@ public class Disparo {
         g.drawImage(sprite, x, y, null);
 
         g.setColor(Color.RED);
-        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        g.drawRect(x, y, getWidth() - 1, getHeight() - 1);
     }
 
-    public boolean seColidiu(AlienFraco inimigos) {
+    public boolean seColidiu(ArrayList<Nave> inimigos) {
         Rectangle disparo = new Rectangle(getX(), getY(), getWidth(), getHeight());
-        Rectangle inimigo = new Rectangle(inimigos.getX(), inimigos.getY(), inimigos.getWidth(), inimigos.getHeight());
-        if (disparo.intersects(inimigo)) {
+        for (Nave inimigo : inimigos) {
+            Rectangle hitboxInimigo = new Rectangle(inimigo.getX(), inimigo.getY(), inimigo.getWidth(), inimigo.getHeight());
+            if (disparo.intersects(hitboxInimigo)) {
+                inimigo.setVida(inimigo.getVida() - getDano());
+                if (inimigo.estaMorto()) {
+                    inimigos.remove(inimigo);
+                }
+                return true;
+            }
+        }
+        if (getY() < 0) {
             return true;
         }
         return false;
