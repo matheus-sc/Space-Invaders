@@ -97,6 +97,13 @@ public class Gameplay extends JPanel implements KeyListener {
             for (Disparo disparo : player.getDisparos()) {
                 if (disparo.seColidiu(aliens)) {
                     player.getDisparos().remove(disparo);
+                    for (Nave alien : aliens) {
+                        if (alien instanceof AlienMedio) {
+                            ((AlienMedio) alien).sofreuDano();
+                        } else if (alien instanceof AlienForte) {
+                            ((AlienForte) alien).sofreuDano();
+                        }
+                    }
                     break;
                 }
             }

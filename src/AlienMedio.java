@@ -14,6 +14,10 @@ public class AlienMedio extends Nave {
         
     }
 
+    public void sofreuDano() {
+        if (getVida() < 20) setSprite("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\AlienMedioDano.png");
+    }
+
     public void moverEsquerda() {
         if (getX() > 0) {
             setX(getX() - velocidade);

@@ -14,6 +14,11 @@ public class AlienForte extends Nave {
         
     }
 
+    public void sofreuDano() {
+        if (getVida() < 20) setSprite("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\AlienForteDano2.png");
+        else if (getVida() < 30) setSprite("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\AlienForteDano1.png");
+    }
+
     public void moverEsquerda() {
         if (getX() > 0) {
             setX(getX() - velocidade);
