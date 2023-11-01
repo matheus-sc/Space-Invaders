@@ -2,30 +2,63 @@ package src;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.imageio.ImageIO;
 
-public class Disparo extends JLabel{
-    private int dano, velocidade, cooldown;
-    private ImageIcon sprite;
+public class Disparo {
+    private int dano, velocidade, cooldown, x, y;
+    private Image sprite;
+    private Player player = new Player(10);
 
     public Disparo(int dano, int velocidade, int cooldown, String spritePath) {
         this.dano = dano;
         this.velocidade = velocidade;
         this.cooldown = cooldown;
 
-        sprite = new ImageIcon(spritePath);
+        x = player.getX() + player.getWidth() / 2;
+        y = player.getY();
+
+        try {
+            sprite = ImageIO.read(new File(spritePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(sprite.getImage(), 0, 0, null);
+    public Disparo(int dano, int velocidade, int cooldown) {
+        this.dano = dano;
+        this.velocidade = velocidade;
+        this.cooldown = cooldown;
 
-        g.setColor(Color.RED);
-        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        try {
+            sprite = ImageIO.read(new File("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\TiroPlayer.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getWidth() {
+        return sprite.getWidth(null);
+    }
+
+    public int getHeight() {
+        return sprite.getHeight(null);
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public int getDano() {
@@ -39,6 +72,14 @@ public class Disparo extends JLabel{
     public int getCooldown() {
         return cooldown;
     }
+
+    public void draw(Graphics g) {
+        g.drawImage(sprite, 950, 950, null);
+
+        g.setColor(Color.RED);
+        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+    }
+
 
     public boolean seColidiu(AlienFraco inimigos) {
         Rectangle disparo = new Rectangle(getX(), getY(), getWidth(), getHeight());

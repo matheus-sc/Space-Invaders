@@ -1,13 +1,13 @@
 package src;
 
-public class AlienFraco extends Nave {
+public class AlienMedio extends Nave {
     private int velocidade;
 
-    public AlienFraco() {
-        setVida(10);
-        this.velocidade = 5;
+    public AlienMedio() {
+        setVida(20);
+        this.velocidade = 10;
 
-       setSprite("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\AlienFraco.png");
+       setSprite("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\AlienMedio.png");
     }
 
     public void atirar(int dano, int velocidade, int cooldown) {
