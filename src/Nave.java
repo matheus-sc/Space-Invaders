@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -13,6 +14,7 @@ public abstract class Nave {
     private Image sprite;
     private boolean podeAtirar = true;  // Variável para controlar a taxa de disparo do player
     private Fundo fundo = new Fundo();
+    private ArrayList<Disparo> disparos = new ArrayList<>();  // Criação do ArrayList para os disparos do player
 
     public void draw(Graphics g) {
         g.drawImage(getSprite(), x, y, null);
@@ -34,6 +36,14 @@ public abstract class Nave {
         }
     }
 
+    public void setPodeAtirar(boolean podeAtirar) {
+        this.podeAtirar = podeAtirar;
+    }
+
+    public void setDisparos(Disparo disparo) {
+        disparos.add(disparo);
+    }
+
     public void setX(int x) {
         this.x = x;
     }
@@ -48,6 +58,10 @@ public abstract class Nave {
 
     public boolean getPodeAtirar() {
         return podeAtirar;
+    }
+
+    public ArrayList<Disparo> getDisparos() {
+        return disparos;
     }
 
     public int getX() {

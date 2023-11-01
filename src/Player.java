@@ -1,5 +1,9 @@
 package src;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
+
 public class Player extends Nave {
 
     public Player(int vida) {
@@ -13,7 +17,20 @@ public class Player extends Nave {
 
     // Método da interface Nave para controlar o disparo do player
     public void atirar(int dano, int velocidade, int cooldown) {
-        
+        if (!getPodeAtirar()) {
+            return;
+        }
+
+        Disparo disparo = new Disparo(dano, velocidade, cooldown, this);
+        setDisparos(disparo);
+        setPodeAtirar(false);
+        Timer timer = new Timer(cooldown, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setPodeAtirar(true);
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 
     public void moverEsquerda() {

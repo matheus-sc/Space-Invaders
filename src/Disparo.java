@@ -12,15 +12,14 @@ import javax.imageio.ImageIO;
 public class Disparo {
     private int dano, velocidade, cooldown, x, y;
     private Image sprite;
-    private Player player = new Player(10);
 
-    public Disparo(int dano, int velocidade, int cooldown, String spritePath) {
+    public Disparo(int dano, int velocidade, int cooldown, String spritePath, Nave atirador) {
         this.dano = dano;
         this.velocidade = velocidade;
         this.cooldown = cooldown;
 
-        x = player.getX() + player.getWidth() / 2;
-        y = player.getY();
+        x = atirador.getX() + atirador.getWidth() / 2;
+        y = atirador.getY() + atirador.getHeight() / 2;
 
         try {
             sprite = ImageIO.read(new File(spritePath));
@@ -29,10 +28,13 @@ public class Disparo {
         }
     }
 
-    public Disparo(int dano, int velocidade, int cooldown) {
+    public Disparo(int dano, int velocidade, int cooldown, Nave atirador) {
         this.dano = dano;
         this.velocidade = velocidade;
         this.cooldown = cooldown;
+
+        x = atirador.getX() + atirador.getWidth() / 2 - 4;
+        y = atirador.getY() + atirador.getHeight() / 2 - 30;
 
         try {
             sprite = ImageIO.read(new File("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\TiroPlayer.png"));
@@ -74,12 +76,11 @@ public class Disparo {
     }
 
     public void draw(Graphics g) {
-        g.drawImage(sprite, 950, 950, null);
+        g.drawImage(sprite, x, y, null);
 
         g.setColor(Color.RED);
         g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
     }
-
 
     public boolean seColidiu(AlienFraco inimigos) {
         Rectangle disparo = new Rectangle(getX(), getY(), getWidth(), getHeight());
@@ -88,5 +89,9 @@ public class Disparo {
             return true;
         }
         return false;
+    }
+
+    public void mover() {
+        y -= velocidade;
     }
 }

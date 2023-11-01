@@ -55,6 +55,7 @@ public class Gameplay extends JPanel implements KeyListener {
         setFocusable(true); 
         
         new Timer(100, movimentoAliens).start();
+        new Timer(100, movimentoDisparo).start();
     }
 
     @Override
@@ -65,6 +66,9 @@ public class Gameplay extends JPanel implements KeyListener {
         for (Nave alien : aliens) {
             alien.draw(g);
         }
+        for (Disparo disparo : player.getDisparos()) {
+            disparo.draw(g);
+        }
         repaint();
         revalidate();
     }
@@ -74,7 +78,7 @@ public class Gameplay extends JPanel implements KeyListener {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_SPACE:
-                player.atirar(10, 30, 500);
+                player.atirar(10, 15, 500);
                 break;
             case KeyEvent.VK_LEFT:
                 player.moverEsquerda();
@@ -86,8 +90,6 @@ public class Gameplay extends JPanel implements KeyListener {
         repaint();
         revalidate();
     }
-
-    
 
     boolean direcaoFracos = false;
     boolean direcaoMedios = false;
@@ -135,6 +137,14 @@ public class Gameplay extends JPanel implements KeyListener {
             return direcaoAtual;
         }
     }
+
+    ActionListener movimentoDisparo = new ActionListener() {
+        public void actionPerformed(ActionEvent actionEvent) {
+            for (Disparo disparo : player.getDisparos()) {
+                disparo.mover();
+            }
+        }
+    };
 
     // Métodos não utilizados, mas necessários para poder implementar o KeyListener
     public void keyTyped(KeyEvent e) {}
