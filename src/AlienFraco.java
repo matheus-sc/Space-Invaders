@@ -7,7 +7,7 @@ public class AlienFraco extends Nave {
         setVida(10);
         this.velocidade = 5;
 
-       setSprite("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\AlienFraco.png");
+       setSprite("assets/AlienFraco.png");
     }
 
     public void atirar(int dano, int velocidade, int cooldown) {

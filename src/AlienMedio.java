@@ -7,7 +7,7 @@ public class AlienMedio extends Nave {
         setVida(20);
         this.velocidade = 10;
 
-       setSprite("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\AlienMedio.png");
+       setSprite("assets/AlienMedio.png");
     }
 
     public void atirar(int dano, int velocidade, int cooldown) {
@@ -15,7 +15,7 @@ public class AlienMedio extends Nave {
     }
 
     public void sofreuDano() {
-        if (getVida() < 20) setSprite("C:\\Users\\mathe\\Downloads\\SpaceInvaders\\assets\\AlienMedioDano.png");
+        if (getVida() < 20) setSprite("assets/alienMedioDano.png");
     }
 
     public void moverEsquerda() {
