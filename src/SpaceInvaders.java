@@ -20,9 +20,11 @@ public class SpaceInvaders extends JFrame {
     private JButton iniciar;  // Botão para iniciar o jogo
     private JLabel imagemFundo, logo;  // Criação dos JLabels para a imagem de fundo e logo
     private Font space_invaders;  // Fonte do jogo
+    private Sons sons;
 
     // Criação do JFrame
     public SpaceInvaders() {
+        sons = new Sons();
         setTitle("Space Invaders");  // Título da janela
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Ação ao fechar a janela
         getContentPane().setLayout(null);  // Layout da janela nulo
@@ -69,6 +71,7 @@ public class SpaceInvaders extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setUndecorated(true);
         setVisible(true);
+        sons.tocarMusica("sounds/spaceinvaders1.wav");
     }
 
     // Método para iniciar o jogo
@@ -82,6 +85,7 @@ public class SpaceInvaders extends JFrame {
         janela.add(new Gameplay());
         janela.setVisible(true);
         setVisible(false);
+        sons.tocarMusica("sounds/spaceinvaders1.wav");
     }
     public static void main(String[] args) {
         new SpaceInvaders();  // Criação do objeto SpaceInvaders (inicia o jogo)

@@ -94,7 +94,7 @@ public abstract class Nave {
         } return false;
     }
 
-    public abstract void atirar(int dano, int velocidade, int cooldown);
+    public abstract boolean atirar(int dano, int velocidade, int cooldown);
 
     public abstract void moverEsquerda();
 

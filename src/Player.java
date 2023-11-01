@@ -16,9 +16,9 @@ public class Player extends Nave {
     }
 
     // Método da interface Nave para controlar o disparo do player
-    public void atirar(int dano, int velocidade, int cooldown) {
+    public boolean atirar(int dano, int velocidade, int cooldown) {
         if (!getPodeAtirar()) {
-            return;
+            return false;
         }
 
         Disparo disparo = new Disparo(dano, velocidade, cooldown, this);
@@ -31,6 +31,7 @@ public class Player extends Nave {
         });
         timer.setRepeats(false);
         timer.start();
+        return true;
     }
 
     public void moverEsquerda() {

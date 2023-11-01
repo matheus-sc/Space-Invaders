@@ -89,9 +89,6 @@ public class Disparo {
             Rectangle hitboxInimigo = new Rectangle(inimigo.getX(), inimigo.getY(), inimigo.getWidth(), inimigo.getHeight());
             if (disparo.intersects(hitboxInimigo)) {
                 inimigo.setVida(inimigo.getVida() - getDano());
-                if (inimigo.estaMorto()) {
-                    inimigos.remove(inimigo);
-                }
                 return true;
             }
         }

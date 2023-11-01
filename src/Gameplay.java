@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -14,8 +15,10 @@ public class Gameplay extends JPanel implements KeyListener {
     private Fundo fundo;  // Criação do JLabel para a imagem de fundo
     private Player player;  // Criação do player
     private ArrayList<Nave> aliens;  // Criação do alien fraco
+    private Sons sons;
 
     public Gameplay() {
+        sons = new Sons();
         setLayout(null);  // Layout do JPanel nulo
 
         fundo = new Fundo(); 
@@ -79,7 +82,9 @@ public class Gameplay extends JPanel implements KeyListener {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_SPACE:
-                player.atirar(10, 15, 500);
+                if (player.atirar(10, 15, 500)) {
+                    sons.tocarSom("sounds/shoot.wav");
+                }
                 break;
             case KeyEvent.VK_LEFT:
                 player.moverEsquerda();
@@ -92,12 +97,19 @@ public class Gameplay extends JPanel implements KeyListener {
         revalidate();
     }
 
-    ActionListener checaColisao = new ActionListener() {
+        ActionListener checaColisao = new ActionListener() {
         public void actionPerformed(ActionEvent actionEvent) {
+            ArrayList<Disparo> disparosRemover = new ArrayList<>();
+            ArrayList<Nave> aliensRemover = new ArrayList<>();
+
             for (Disparo disparo : player.getDisparos()) {
                 if (disparo.seColidiu(aliens)) {
-                    player.getDisparos().remove(disparo);
+                    disparosRemover.add(disparo);
                     for (Nave alien : aliens) {
+                        if (alien.estaMorto()) {
+                            aliensRemover.add(alien);
+                            sons.tocarSom("sounds/invaderkilled.wav");
+                        }
                         if (alien instanceof AlienMedio) {
                             ((AlienMedio) alien).sofreuDano();
                         } else if (alien instanceof AlienForte) {
@@ -107,6 +119,9 @@ public class Gameplay extends JPanel implements KeyListener {
                     break;
                 }
             }
+
+            player.getDisparos().removeAll(disparosRemover);
+            aliens.removeAll(aliensRemover);
         }    
     };
 
