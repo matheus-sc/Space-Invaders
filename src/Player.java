@@ -17,12 +17,12 @@ public class Player extends Nave {
         setY(playerY);
     }
 
-    public boolean atirar(int dano, int velocidade, int cooldown) {
+    public boolean atirar(int dano, int velocidade, int cooldown, String spriteTiroPath) {
         if (!getPodeAtirar()) {
             return false;
         }
 
-        Disparo disparo = new Disparo(dano, velocidade, cooldown, "assets/TiroPlayer.png", this);
+        Disparo disparo = new Disparo(dano, velocidade, cooldown, spriteTiroPath, this);
         setDisparos(disparo);
         setPodeAtirar(false);
         Timer timer = new Timer(cooldown, new ActionListener() {

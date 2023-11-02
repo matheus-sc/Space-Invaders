@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
@@ -16,11 +17,14 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Dimension;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 public class SpaceInvaders extends JFrame {
     private JButton iniciar;
+    private JLabel highScoreLabel;
     private Image logo;
     private Font space_invaders;
     private Sons sons;
@@ -30,9 +34,14 @@ public class SpaceInvaders extends JFrame {
     public SpaceInvaders() {
         sons = new Sons();
         fundo = new Fundo();
+
+        highScoreLabel = new JLabel();
+        highScoreLabel.setBounds(10, 10, 200, 30); // Adjust the position and size as needed
+        getContentPane().add(highScoreLabel);
+
         try {
-            File file = new File("assets/Logo.png");
-            logo = ImageIO.read(file);
+            File fileLogo = new File("assets/Logo.png");
+            logo = ImageIO.read(fileLogo);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,6 +87,8 @@ public class SpaceInvaders extends JFrame {
                 int buttonY = logoY + logoHeight + 50;
                 iniciar.setBounds(buttonX, buttonY, buttonWidth, buttonHeight);
 
+                highScoreLabel.setBounds(10, 10, 600, 30); // Adjust the position and size as needed
+
                 int comboBoxWidth = 200;
                 int comboBoxHeight = 50;
                 int comboBoxX = (screenSize.width - comboBoxWidth) / 2;
@@ -96,6 +107,30 @@ public class SpaceInvaders extends JFrame {
         iniciar.setBackground(Color.YELLOW);
         iniciar.setFocusPainted(false);
         contentPane.add(iniciar);
+
+        highScoreLabel = new JLabel();
+        highScoreLabel.setFont(space_invaders);
+        highScoreLabel.setForeground(Color.RED);
+        highScoreLabel.setBackground(Color.YELLOW);
+        highScoreLabel.setFocusable(false);
+        contentPane.add(highScoreLabel);
+
+        try {
+            File fileScore = new File("highscore.txt");
+            if (fileScore.exists()) {
+                BufferedReader reader = new BufferedReader(new FileReader(fileScore));
+                String highScore = reader.readLine();
+                reader.close();
+
+                if (highScore != null) {
+                    highScoreLabel.setText("High Score: " + highScore);
+                }
+            } else {
+                highScoreLabel.setText("High Score: 0");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         dificuldade = new JComboBox<>();
         dificuldade.addItem("Fácil");

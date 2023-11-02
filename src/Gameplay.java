@@ -3,10 +3,17 @@ package src;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,6 +30,7 @@ public class Gameplay extends JPanel implements KeyListener {
     private int score = 0;
 
     public Gameplay(String dificuldade) {
+        formacaoAliens(dificuldade);
         scoreLabel = new JLabel("Score: " + score);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
         scoreLabel.setForeground(Color.WHITE);
@@ -42,15 +50,13 @@ public class Gameplay extends JPanel implements KeyListener {
         vidaLabel.setBounds(10, 30, 100, 20);
         add(vidaLabel);
 
-        formacaoAliens(dificuldade);
-
         addKeyListener(this); // Adiciona o KeyListener ao JPanel para capturar os eventos de teclado
         setFocusable(true); 
         
         new Timer(100, movimentoAliens).start();
         new Timer(100, movimentoDisparo).start();
-        new Timer(100, checaColisao).start();
         new Timer(1000, disparoAliens).start();
+        new Timer(100, checaColisao).start();
     }
 
     @Override
@@ -78,7 +84,7 @@ public class Gameplay extends JPanel implements KeyListener {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_SPACE:
-                if (player.atirar(10, 15, 500)) {
+                if (player.atirar(10, 15, 500, "assets/TiroPlayer.png")) {
                     sons.tocarSom("sounds/shoot.wav");
                 }
                 break;
@@ -93,51 +99,71 @@ public class Gameplay extends JPanel implements KeyListener {
         revalidate();
     }
 
-        ActionListener checaColisao = new ActionListener() {
+    ActionListener checaColisao = new ActionListener() {
         public void actionPerformed(ActionEvent actionEvent) {
-            ArrayList<Disparo> disparosRemover = new ArrayList<>();
-            ArrayList<Nave> aliensRemover = new ArrayList<>();
+            if (!player.estaMorto() && !aliens.isEmpty()) {
+                ArrayList<Disparo> disparosRemover = new ArrayList<>();
+                ArrayList<Nave> aliensRemover = new ArrayList<>();
 
-            for (Disparo disparo : player.getDisparos()) {
-                if (disparo.seColidiu(aliens)) {
-                    disparosRemover.add(disparo);
-                    for (Nave alien : aliens) {
-                        if (alien.estaMorto()) {
-                            if (alien instanceof AlienFraco) score += 10;
-                            else if (alien instanceof AlienMedio) score += 20;
-                            else if (alien instanceof AlienForte) score += 30;
-                            aliensRemover.add(alien);
-                            sons.tocarSom("sounds/invaderkilled.wav");
-                        }
-                        if (alien instanceof AlienMedio) {
-                            ((AlienMedio) alien).sofreuDano();
-                        } else if (alien instanceof AlienForte) {
-                            ((AlienForte) alien).sofreuDano();
-                        }
-                    }
-                    break;
-                }
-            }
-            for (Nave alien : aliens) {
-                for (Disparo disparo : alien.getDisparos()) {
-                    if (disparo.seColidiu(player)) {
+                for (Disparo disparo : player.getDisparos()) {
+                    if (disparo.seColidiu(aliens)) {
                         disparosRemover.add(disparo);
-                        if (player.estaMorto()) {
-                            sons.tocarSom("sounds/invaderkilled.wav");
-                            System.exit(0);
+                        for (Nave alien : aliens) {
+                            if (alien.estaMorto()) {
+                                if (alien instanceof AlienFraco) score += 100;
+                                else if (alien instanceof AlienMedio) score += 250;
+                                else if (alien instanceof AlienForte) score += 500;
+                                aliensRemover.add(alien);
+                                sons.tocarSom("sounds/invaderkilled.wav");
+                            }
+                            if (alien instanceof AlienMedio) {
+                                ((AlienMedio) alien).sofreuDano();
+                            } else if (alien instanceof AlienForte) {
+                                ((AlienForte) alien).sofreuDano();
+                            }
                         }
-                        else if (player.getVida() <= 30) player.setSprite("assets/JogadorDano2.png");
-                        else if (player.getVida() < 60) player.setSprite("assets/JogadorDano1.png");
+                        break;
                     }
                 }
-                alien.getDisparos().removeAll(disparosRemover);
-            }
+                for (Nave alien : aliens) {
+                    for (Disparo disparo : alien.getDisparos()) {
+                        if (disparo.seColidiu(player)) {
+                            disparosRemover.add(disparo);
+                            if (player.getVida() <= 30) player.setSprite("assets/JogadorDano2.png");
+                            else if (player.getVida() < 60) player.setSprite("assets/JogadorDano1.png");
+                        }
+                    }
+                    alien.getDisparos().removeAll(disparosRemover);
+                    
+                    Rectangle hitboxAlien = new Rectangle(alien.getX(), alien.getY(), alien.getWidth(), alien.getHeight());
+                    Rectangle hitboxPlayer = new Rectangle(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+                    if (hitboxAlien.intersects(hitboxPlayer)) {
+                        player.setVida(0);
+                    }
+                }
 
-            scoreLabel.setText("Score: " + score);
-            vidaLabel.setText("Vida: " + player.getVida());
-            player.getDisparos().removeAll(disparosRemover);
-            aliens.removeAll(aliensRemover);
-        }    
+                scoreLabel.setText("Score: " + score);
+                vidaLabel.setText("Vida: " + player.getVida());
+                player.getDisparos().removeAll(disparosRemover);
+                aliens.removeAll(aliensRemover);
+            }
+            else if (player.estaMorto()) {
+                sons.tocarSom("sounds/explosion.wav");
+                JLabel gameOverLabel = new JLabel("Game Over");
+                gameOverLabel.setFont(new Font("Arial", Font.BOLD, 32));
+                gameOverLabel.setForeground(Color.WHITE);
+                gameOverLabel.setBounds(300, 300, 200, 50);
+                add(gameOverLabel);
+                salvarScore();
+            } else {
+                JLabel vitoriaLabel = new JLabel("Vitória");
+                vitoriaLabel.setFont(new Font("Arial", Font.BOLD, 32));
+                vitoriaLabel.setForeground(Color.WHITE);
+                vitoriaLabel.setBounds(300, 300, 200, 50);
+                add(vitoriaLabel);
+                salvarScore();
+            }
+        }  
     };
 
     boolean direcaoFracos = false;
@@ -214,7 +240,7 @@ public class Gameplay extends JPanel implements KeyListener {
                     velocidade = 30;
                 } else {
                     dano = 30;
-                    velocidade = 35;
+                    velocidade = 45;
                 }
 
                 // Make the alien shoot
@@ -296,7 +322,11 @@ public class Gameplay extends JPanel implements KeyListener {
             for (int linha = 0; linha < 5; linha++) {
                 for (int col = 0; col < 10; col++) {
                     Alien alien;
-                    alien = new AlienForte();
+                    if (linha < 1) {
+                        alien = new AlienMedio();
+                    } else {
+                        alien = new AlienForte();
+                    }
             
                     // Calculate the x and y coordinates
                     int x = col * (espacoHorizontal + padding) + 600;
@@ -308,6 +338,40 @@ public class Gameplay extends JPanel implements KeyListener {
                     aliens.add(alien);
                 }
             }
+        }
+    }
+
+    public void salvarScore() {
+        long startTime;
+        startTime = System.currentTimeMillis();
+        long elapsedTimeMillis = System.currentTimeMillis()-startTime;
+        double elapsedTimeSec = elapsedTimeMillis/1000.0;
+        double scoreLose = (elapsedTimeSec * 10);
+        score -= scoreLose;
+        String scoreStr = String.format("%d", score);
+        scoreLabel.setText("Score: " + scoreStr);
+        try {
+            File file = new File("highscore.txt");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            String highScore = "0";
+            if (line != null) {
+                highScore = line;
+            }
+            reader.close();
+
+            if (scoreStr.length() > highScore.length() || 
+                (scoreStr.length() == highScore.length() && scoreStr.compareTo(highScore) > 0)) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write(scoreStr);
+                writer.close();
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading or writing the file.");
+            System.out.println(e.getMessage());
         }
     }
 

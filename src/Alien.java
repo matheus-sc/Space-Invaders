@@ -43,6 +43,6 @@ public abstract class Alien extends Nave {
     }
 
     public void moverBaixo() {
-        setY(getY() + 20);
+        setY(getY() + 30);
     }
 }
