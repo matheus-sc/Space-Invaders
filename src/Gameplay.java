@@ -3,6 +3,7 @@ package src;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +17,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.lang.NumberFormatException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -26,16 +29,27 @@ public class Gameplay extends JPanel implements KeyListener {
     private Player player;  // Criação do player
     private ArrayList<Alien> aliens;  // Criação do alien fraco
     private Sons sons;
-    private JLabel scoreLabel, vidaLabel;
-    private int score = 0;
+    private JLabel scoreLabel, vidaLabel, timeLabel;
+    private int score, time;
+    private Image win, lose;
+    private boolean gameRunning;
+    private Timer movimentoAliensTimer, movimentoDisparoTimer, disparoAliensTimer, checaColisaoTimer, timer;
 
     public Gameplay(String dificuldade) {
+        gameRunning = true;
         formacaoAliens(dificuldade);
         scoreLabel = new JLabel("Score: " + score);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
         scoreLabel.setForeground(Color.WHITE);
         scoreLabel.setBounds(10, 10, 100, 20);
         add(scoreLabel);
+
+        time = 0;
+        timeLabel = new JLabel("Time: 0");
+        timeLabel.setBounds(10, 50, 100, 30); // Adjust the position and size as needed
+        add(timeLabel);
+        timeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        timeLabel.setForeground(Color.WHITE);
 
         sons = new Sons();
         setLayout(null);  // Layout do JPanel nulo
@@ -52,29 +66,53 @@ public class Gameplay extends JPanel implements KeyListener {
 
         addKeyListener(this); // Adiciona o KeyListener ao JPanel para capturar os eventos de teclado
         setFocusable(true); 
+
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                time++;
+                timeLabel.setText("Time: " + time);
+            }
+        });
+        timer.start();
         
-        new Timer(100, movimentoAliens).start();
-        new Timer(100, movimentoDisparo).start();
-        new Timer(1000, disparoAliens).start();
-        new Timer(100, checaColisao).start();
+        movimentoAliensTimer = new Timer(100, movimentoAliens);
+        movimentoDisparoTimer = new Timer(100, movimentoDisparo);
+        disparoAliensTimer = new Timer(1000, disparoAliens);
+        checaColisaoTimer = new Timer(100, checaColisao);
+
+        movimentoAliensTimer.start();
+        movimentoDisparoTimer.start();
+        disparoAliensTimer.start();
+        checaColisaoTimer.start();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         fundo.draw(g);
-        player.draw(g);
-        for (Nave alien : aliens) {
-            alien.draw(g);
-        }
-        for (Disparo disparo : player.getDisparos()) {
-            disparo.draw(g);
-        }
-        for (Nave alien : aliens) {
-            for (Disparo disparo : alien.getDisparos()) {
+        if (!gameRunning) {
+            movimentoAliensTimer.stop();
+            movimentoDisparoTimer.stop();
+            disparoAliensTimer.stop();
+            checaColisaoTimer.stop();
+            timer.stop();
+        } else {
+            player.draw(g);
+            for (Nave alien : aliens) {
+                alien.draw(g);
+            }
+            for (Disparo disparo : player.getDisparos()) {
                 disparo.draw(g);
             }
+            for (Nave alien : aliens) {
+                for (Disparo disparo : alien.getDisparos()) {
+                    disparo.draw(g);
+                }
+            }
         }
+        if (player.estaMorto()) g.drawImage(lose, 570, 270, 800, 600, null);
+        else if (aliens.isEmpty()) g.drawImage(win, 570, 270, 800, 600, null);
         repaint();
         revalidate();
     }
@@ -93,6 +131,9 @@ public class Gameplay extends JPanel implements KeyListener {
                 break;
             case KeyEvent.VK_RIGHT:
                 player.moverDireita();
+                break;
+            case KeyEvent.VK_ESCAPE:
+                System.exit(0);
                 break;
         }
         repaint();
@@ -148,20 +189,28 @@ public class Gameplay extends JPanel implements KeyListener {
                 aliens.removeAll(aliensRemover);
             }
             else if (player.estaMorto()) {
-                sons.tocarSom("sounds/explosion.wav");
-                JLabel gameOverLabel = new JLabel("Game Over");
-                gameOverLabel.setFont(new Font("Arial", Font.BOLD, 32));
-                gameOverLabel.setForeground(Color.WHITE);
-                gameOverLabel.setBounds(300, 300, 200, 50);
-                add(gameOverLabel);
+                sons.tocarSom("sounds/invaderkilled.wav");
+                
+                try {
+                    File fileLose = new File("assets/GameOver.png");
+                    lose = ImageIO.read(fileLose);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
                 salvarScore();
+                gameRunning = false;
+                
             } else {
-                JLabel vitoriaLabel = new JLabel("Vitória");
-                vitoriaLabel.setFont(new Font("Arial", Font.BOLD, 32));
-                vitoriaLabel.setForeground(Color.WHITE);
-                vitoriaLabel.setBounds(300, 300, 200, 50);
-                add(vitoriaLabel);
+                try {
+                    File fileWin = new File("assets/YouWin.png");
+                    win = ImageIO.read(fileWin);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
                 salvarScore();
+                gameRunning = false;
             }
         }  
     };
@@ -342,11 +391,7 @@ public class Gameplay extends JPanel implements KeyListener {
     }
 
     public void salvarScore() {
-        long startTime;
-        startTime = System.currentTimeMillis();
-        long elapsedTimeMillis = System.currentTimeMillis()-startTime;
-        double elapsedTimeSec = elapsedTimeMillis/1000.0;
-        double scoreLose = (elapsedTimeSec * 10);
+        double scoreLose = (time * 10);
         score -= scoreLose;
         String scoreStr = String.format("%d", score);
         scoreLabel.setText("Score: " + scoreStr);
@@ -355,23 +400,22 @@ public class Gameplay extends JPanel implements KeyListener {
             if (!file.exists()) {
                 file.createNewFile();
             }
+        
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = reader.readLine();
-            String highScore = "0";
+            int highScore = 0;
             if (line != null) {
-                highScore = line;
+                highScore = Integer.parseInt(line);
             }
             reader.close();
-
-            if (scoreStr.length() > highScore.length() || 
-                (scoreStr.length() == highScore.length() && scoreStr.compareTo(highScore) > 0)) {
+        
+            if (score > highScore) {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                writer.write(scoreStr);
+                writer.write(String.valueOf(score));
                 writer.close();
             }
-        } catch (IOException e) {
-            System.out.println("An error occurred while reading or writing the file.");
-            System.out.println(e.getMessage());
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
         }
     }
 

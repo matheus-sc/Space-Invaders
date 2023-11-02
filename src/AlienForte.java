@@ -6,7 +6,7 @@ public class AlienForte extends Alien {
         setVida(30);
         setVelocidade(15);
 
-       setSprite("assets/AlienForte.png");
+        setSprite("assets/AlienForte.png");
     }
 
     public void sofreuDano() {
