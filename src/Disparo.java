@@ -64,7 +64,7 @@ public class Disparo {
         g.drawImage(sprite, x, y, null);
     }
 
-    public boolean seColidiu(ArrayList<Nave> inimigos) {
+    public boolean seColidiu(ArrayList<Alien> inimigos) {
         Rectangle disparo = new Rectangle(getX(), getY(), getWidth(), getHeight());
         for (Nave inimigo : inimigos) {
             Rectangle hitboxInimigo = new Rectangle(inimigo.getX(), inimigo.getY(), inimigo.getWidth(), inimigo.getHeight());

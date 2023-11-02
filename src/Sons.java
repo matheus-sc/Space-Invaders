@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -22,6 +24,16 @@ public class Sons {
                 
                 // Get a sound clip resource.
                 clip = AudioSystem.getClip();
+                
+                // Add a LineListener to the Clip to restart it when it stops
+                clip.addLineListener(new LineListener() {
+                    public void update(LineEvent event) {
+                        if (event.getType() == LineEvent.Type.STOP) {
+                            clip.setFramePosition(0); // rewind to the beginning
+                            clip.start(); // Start playing
+                        }
+                    }
+                });
                 
                 // Open audio clip and load samples from the audio input stream.
                 clip.open(audioIn);

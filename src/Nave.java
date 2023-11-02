@@ -94,7 +94,7 @@ public abstract class Nave {
         } return false;
     }
 
-    public abstract boolean atirar(int dano, int velocidade, int cooldown);
+    public abstract boolean atirar(int dano, int velocidade, int cooldown, String spriteTiroPath);
 
     public abstract void moverEsquerda();
 

@@ -2,6 +2,7 @@ package src;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -24,6 +25,7 @@ public class SpaceInvaders extends JFrame {
     private Font space_invaders;
     private Sons sons;
     private Fundo fundo;
+    private JComboBox<String> dificuldade;
 
     public SpaceInvaders() {
         sons = new Sons();
@@ -47,9 +49,9 @@ public class SpaceInvaders extends JFrame {
 
         // Carregamento da fonte
         try {
-            space_invaders = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/humanoid.regular.ttf")).deriveFont(40f);
+            space_invaders = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/SpaceFont.ttf")).deriveFont(20f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fonts/humanoid.regular.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fonts/SpaceFont.ttf")));
         } catch (FontFormatException | IOException e) {
             System.out.println("Erro ao carregar fontes!");
         } catch (Exception e) {
@@ -74,8 +76,14 @@ public class SpaceInvaders extends JFrame {
                 int buttonHeight = 30;
                 int buttonX = (screenSize.width - buttonWidth) / 2;
                 int buttonY = logoY + logoHeight + 50;
-
                 iniciar.setBounds(buttonX, buttonY, buttonWidth, buttonHeight);
+
+                int comboBoxWidth = 200;
+                int comboBoxHeight = 50;
+                int comboBoxX = (screenSize.width - comboBoxWidth) / 2;
+                int comboBoxY = buttonY + buttonHeight + 50;
+                dificuldade.setBounds(comboBoxX, comboBoxY, comboBoxWidth, comboBoxHeight);
+
             }
         };
 
@@ -87,8 +95,17 @@ public class SpaceInvaders extends JFrame {
         iniciar.setForeground(Color.RED);
         iniciar.setBackground(Color.YELLOW);
         iniciar.setFocusPainted(false);
-
         contentPane.add(iniciar);
+
+        dificuldade = new JComboBox<>();
+        dificuldade.addItem("Fácil");
+        dificuldade.addItem("Médio");
+        dificuldade.addItem("Difícil");
+        dificuldade.setFont(space_invaders);
+        dificuldade.setForeground(Color.RED);
+        dificuldade.setBackground(Color.YELLOW);
+        dificuldade.setFocusable(false);
+        contentPane.add(dificuldade);
 
         iniciar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -103,13 +120,14 @@ public class SpaceInvaders extends JFrame {
     }
 
     public void iniciarJogo() {
+        String dificuldade = this.dificuldade.getSelectedItem().toString();
         JFrame janela = new JFrame("Space Invaders");
         janela.setTitle("Space Invaders");
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         janela.setSize(getSize());
         janela.setExtendedState(JFrame.MAXIMIZED_BOTH);
         janela.setUndecorated(true);
-        janela.add(new Gameplay(20));
+        janela.add(new Gameplay(dificuldade));
         janela.setVisible(true);
         setVisible(false);
         sons.tocarMusica("sounds/spaceinvaders1.wav");

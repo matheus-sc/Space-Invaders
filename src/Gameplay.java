@@ -17,12 +17,12 @@ import javax.swing.Timer;
 public class Gameplay extends JPanel implements KeyListener {
     private Fundo fundo;  // Criação do JLabel para a imagem de fundo
     private Player player;  // Criação do player
-    private ArrayList<Nave> aliens;  // Criação do alien fraco
+    private ArrayList<Alien> aliens;  // Criação do alien fraco
     private Sons sons;
     private JLabel scoreLabel, vidaLabel;
     private int score = 0;
 
-    public Gameplay(int numeroAliens) {
+    public Gameplay(String dificuldade) {
         scoreLabel = new JLabel("Score: " + score);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
         scoreLabel.setForeground(Color.WHITE);
@@ -42,33 +42,7 @@ public class Gameplay extends JPanel implements KeyListener {
         vidaLabel.setBounds(10, 30, 100, 20);
         add(vidaLabel);
 
-        aliens = new ArrayList<Nave>();
-        int espacoHorizontal = 50; 
-        int espacoVertical = 50; 
-        int padding = 10; 
-
-        for (int linha = 0; linha < 5; linha++) {
-            for (int col = 0; col < 10; col++) {
-                Nave alien;
-                if (linha < 1) {
-                    alien = new AlienForte();
-                } else if (linha < 3) {
-                    alien = new AlienMedio();
-                } else {
-                    alien = new AlienFraco(); 
-                }
-        
-                
-                // Calculate the x and y coordinates
-                int x = col * (espacoHorizontal + padding) + 600;
-                int y = linha * (espacoVertical + padding) + 100;
-        
-                alien.setX(x);
-                alien.setY(y);
-        
-                aliens.add(alien);
-            }
-        }
+        formacaoAliens(dificuldade);
 
         addKeyListener(this); // Adiciona o KeyListener ao JPanel para capturar os eventos de teclado
         setFocusable(true); 
@@ -171,25 +145,37 @@ public class Gameplay extends JPanel implements KeyListener {
     boolean direcaoFortes = false;
     ActionListener movimentoAliens = new ActionListener() {
         public void actionPerformed(ActionEvent actionEvent) {
+            boolean edgeHitFracos = false;
+            boolean edgeHitMedios = false;
+            boolean edgeHitFortes = false;
+
             // First move all aliens
             for (Nave alien : aliens) {
                 if (alien instanceof AlienFraco) {
                     moverAlien(alien, direcaoFracos);
+                    edgeHitFracos = edgeHitFracos || verificarDirecao(alien, direcaoFracos);
                 } else if (alien instanceof AlienMedio) {
                     moverAlien(alien, direcaoMedios);
+                    edgeHitMedios = edgeHitMedios || verificarDirecao(alien, direcaoMedios);
                 } else {
                     moverAlien(alien, direcaoFortes);
+                    edgeHitFortes = edgeHitFortes || verificarDirecao(alien, direcaoFortes);
                 }
             }
-    
-            // Then check if any alien has hit the edge and update direcao
-            for (Nave alien : aliens) {
-                if (alien instanceof AlienFraco) {
-                    direcaoFracos = verificarDirecao(alien, direcaoFracos);
-                } else if (alien instanceof AlienMedio) {
-                    direcaoMedios = verificarDirecao(alien, direcaoMedios);
-                } else {
-                    direcaoFortes = verificarDirecao(alien, direcaoFortes);
+
+            // If any alien has hit the edge, move all aliens down and reverse direction for the type that hit the edge
+            if (edgeHitFracos || edgeHitMedios || edgeHitFortes) {
+                for (Alien alien : aliens) {
+                    alien.moverBaixo();
+                }
+                if (edgeHitFracos) {
+                    direcaoFracos = !direcaoFracos;
+                }
+                if (edgeHitMedios) {
+                    direcaoMedios = !direcaoMedios;
+                }
+                if (edgeHitFortes) {
+                    direcaoFortes = !direcaoFortes;
                 }
             }
         }
@@ -204,13 +190,7 @@ public class Gameplay extends JPanel implements KeyListener {
     }
 
     private boolean verificarDirecao(Nave alien, boolean direcaoAtual) {
-        if (alien.getX() >= alien.getFundoWidth() - alien.getWidth()) {
-            return false;
-        } else if (alien.getX() <= 0) {
-            return true;
-        } else {
-            return direcaoAtual;
-        }
+        return (alien.getX() >= alien.getFundoWidth() - alien.getWidth()) || (alien.getX() <= 0);
     }
 
     ActionListener disparoAliens = new ActionListener() {
@@ -223,22 +203,31 @@ public class Gameplay extends JPanel implements KeyListener {
                 int index = random.nextInt(aliens.size());
 
                 // Get the alien at the random index
-                Nave alien = aliens.get(index);
+                Alien alien = aliens.get(index);
 
                 int dano, velocidade;
                 if (alien instanceof AlienFraco) {
                     dano = 10;
-                    velocidade = 10;
+                    velocidade = 25;
                 } else if (alien instanceof AlienMedio) {
                     dano = 20;
-                    velocidade = 15;
+                    velocidade = 30;
                 } else {
                     dano = 30;
-                    velocidade = 20;
+                    velocidade = 35;
                 }
 
                 // Make the alien shoot
-                if (alien.atirar(dano, velocidade, 1000)) {
+                String spriteTiroPath;
+                if (alien instanceof AlienFraco) {
+                    spriteTiroPath = "assets/TiroFraco.png";
+                } else if (alien instanceof AlienMedio) {
+                    spriteTiroPath = "assets/TiroMedio.png";
+                } else {
+                    spriteTiroPath = "assets/TiroForte.png";
+                }
+
+                if (alien.atirar(dano, velocidade, 1000, spriteTiroPath)) {
                     sons.tocarSom("sounds/shoot.wav");
                 }
             }
@@ -257,6 +246,70 @@ public class Gameplay extends JPanel implements KeyListener {
             }
         }
     };
+
+    public void formacaoAliens(String dificuldade) {
+        aliens = new ArrayList<Alien>();
+        int espacoHorizontal = 50; 
+        int espacoVertical = 50; 
+        int padding = 10; 
+
+        if (dificuldade == "Fácil") {
+            for (int linha = 0; linha < 5; linha++) {
+                for (int col = 0; col < 10; col++) {
+                    Alien alien;
+                    if (linha < 2) alien = new AlienMedio();
+                    else alien = new AlienFraco();
+            
+                    // Calculate the x and y coordinates
+                    int x = col * (espacoHorizontal + padding) + 600;
+                    int y = linha * (espacoVertical + padding) + 100;
+            
+                    alien.setX(x);
+                    alien.setY(y);
+            
+                    aliens.add(alien);
+                }
+            }
+        } else if (dificuldade == "Médio") {
+            for (int linha = 0; linha < 5; linha++) {
+                for (int col = 0; col < 10; col++) {
+                    Alien alien;
+                    if (linha < 1) {
+                        alien = new AlienForte();
+                    } else if (linha < 3) {
+                        alien = new AlienMedio(); 
+                    } else {
+                        alien = new AlienFraco();
+                    }
+            
+                    // Calculate the x and y coordinates
+                    int x = col * (espacoHorizontal + padding) + 600;
+                    int y = linha * (espacoVertical + padding) + 100;
+            
+                    alien.setX(x);
+                    alien.setY(y);
+            
+                    aliens.add(alien);
+                }
+            }
+        } else {
+            for (int linha = 0; linha < 5; linha++) {
+                for (int col = 0; col < 10; col++) {
+                    Alien alien;
+                    alien = new AlienForte();
+            
+                    // Calculate the x and y coordinates
+                    int x = col * (espacoHorizontal + padding) + 600;
+                    int y = linha * (espacoVertical + padding) + 100;
+            
+                    alien.setX(x);
+                    alien.setY(y);
+
+                    aliens.add(alien);
+                }
+            }
+        }
+    }
 
     // Métodos não utilizados, mas necessários para poder implementar o KeyListener
     public void keyTyped(KeyEvent e) {}
