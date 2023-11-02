@@ -22,7 +22,7 @@ public class Player extends Nave {
             return false;
         }
 
-        Disparo disparo = new Disparo(dano, velocidade, cooldown, this);
+        Disparo disparo = new Disparo(dano, velocidade, cooldown, "assets/TiroPlayer.png", this);
         setDisparos(disparo);
         setPodeAtirar(false);
         Timer timer = new Timer(cooldown, new ActionListener() {

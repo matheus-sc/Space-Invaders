@@ -86,6 +86,7 @@ public class SpaceInvaders extends JFrame {
         iniciar.setFont(space_invaders);
         iniciar.setForeground(Color.RED);
         iniciar.setBackground(Color.YELLOW);
+        iniciar.setFocusPainted(false);
 
         contentPane.add(iniciar);
 
@@ -108,7 +109,7 @@ public class SpaceInvaders extends JFrame {
         janela.setSize(getSize());
         janela.setExtendedState(JFrame.MAXIMIZED_BOTH);
         janela.setUndecorated(true);
-        janela.add(new Gameplay());
+        janela.add(new Gameplay(20));
         janela.setVisible(true);
         setVisible(false);
         sons.tocarMusica("sounds/spaceinvaders1.wav");

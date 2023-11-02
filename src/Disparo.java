@@ -18,26 +18,11 @@ public class Disparo {
         this.velocidade = velocidade;
         this.cooldown = cooldown;
 
-        x = atirador.getX() + atirador.getWidth() / 2;
-        y = atirador.getY() + atirador.getHeight() / 2;
-
-        try {
-            sprite = ImageIO.read(new File(spritePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Disparo(int dano, int velocidade, int cooldown, Nave atirador) {
-        this.dano = dano;
-        this.velocidade = velocidade;
-        this.cooldown = cooldown;
-
         x = atirador.getX() + atirador.getWidth() / 2 - 4;
         y = atirador.getY() + atirador.getHeight() / 2 - 30;
 
         try {
-            sprite = ImageIO.read(new File("assets/TiroPlayer.png"));
+            sprite = ImageIO.read(new File(spritePath));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -89,6 +74,16 @@ public class Disparo {
             }
         }
         if (getY() < 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean seColidiu(Player player) {
+        Rectangle disparo = new Rectangle(getX(), getY(), getWidth(), getHeight());
+        Rectangle hitboxPlayer = new Rectangle(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+        if (disparo.intersects(hitboxPlayer)) {
+            player.setVida(player.getVida() - getDano());
             return true;
         }
         return false;

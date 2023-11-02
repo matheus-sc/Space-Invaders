@@ -19,22 +19,28 @@ public class Gameplay extends JPanel implements KeyListener {
     private Player player;  // Criação do player
     private ArrayList<Nave> aliens;  // Criação do alien fraco
     private Sons sons;
-    private JLabel scoreLabel;
+    private JLabel scoreLabel, vidaLabel;
     private int score = 0;
 
-    public Gameplay() {
-        sons = new Sons();
-        setLayout(null);  // Layout do JPanel nulo
-        
+    public Gameplay(int numeroAliens) {
         scoreLabel = new JLabel("Score: " + score);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
         scoreLabel.setForeground(Color.WHITE);
         scoreLabel.setBounds(10, 10, 100, 20);
         add(scoreLabel);
+
+        sons = new Sons();
+        setLayout(null);  // Layout do JPanel nulo
+        
         fundo = new Fundo(); 
 
         // Criação do player
-        player = new Player(10);
+        player = new Player(100);
+        vidaLabel = new JLabel("Vida: " + player.getVida());
+        vidaLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        vidaLabel.setForeground(Color.WHITE);   
+        vidaLabel.setBounds(10, 30, 100, 20);
+        add(vidaLabel);
 
         aliens = new ArrayList<Nave>();
         int espacoHorizontal = 50; 
@@ -44,13 +50,12 @@ public class Gameplay extends JPanel implements KeyListener {
         for (int linha = 0; linha < 5; linha++) {
             for (int col = 0; col < 10; col++) {
                 Nave alien;
-                int divisao = linha / 2;
-                if (linha <= divisao) {
-                    alien = new AlienFraco();
-                } else if (linha <= divisao * 2) {
+                if (linha < 1) {
+                    alien = new AlienForte();
+                } else if (linha < 3) {
                     alien = new AlienMedio();
                 } else {
-                    alien = new AlienForte(); 
+                    alien = new AlienFraco(); 
                 }
         
                 
@@ -71,7 +76,6 @@ public class Gameplay extends JPanel implements KeyListener {
         new Timer(100, movimentoAliens).start();
         new Timer(100, movimentoDisparo).start();
         new Timer(100, checaColisao).start();
-        new Timer(100, calculoScore).start();
         new Timer(1000, disparoAliens).start();
     }
 
@@ -140,7 +144,23 @@ public class Gameplay extends JPanel implements KeyListener {
                     break;
                 }
             }
+            for (Nave alien : aliens) {
+                for (Disparo disparo : alien.getDisparos()) {
+                    if (disparo.seColidiu(player)) {
+                        disparosRemover.add(disparo);
+                        if (player.estaMorto()) {
+                            sons.tocarSom("sounds/invaderkilled.wav");
+                            System.exit(0);
+                        }
+                        else if (player.getVida() <= 30) player.setSprite("assets/JogadorDano2.png");
+                        else if (player.getVida() < 60) player.setSprite("assets/JogadorDano1.png");
+                    }
+                }
+                alien.getDisparos().removeAll(disparosRemover);
+            }
 
+            scoreLabel.setText("Score: " + score);
+            vidaLabel.setText("Vida: " + player.getVida());
             player.getDisparos().removeAll(disparosRemover);
             aliens.removeAll(aliensRemover);
         }    
@@ -235,12 +255,6 @@ public class Gameplay extends JPanel implements KeyListener {
                     disparo.moverBaixo();
                 }
             }
-        }
-    };
-
-    ActionListener calculoScore = new ActionListener() {
-        public void actionPerformed(ActionEvent actionEvent) {
-            scoreLabel.setText("Score: " + score);
         }
     };
 
