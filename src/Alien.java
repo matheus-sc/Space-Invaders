@@ -37,7 +37,7 @@ public abstract class Alien extends Nave {
     }
 
     public void moverDireita() {
-        if (getX() < getFundoWidth() - getWidth()) {
+        if (getX() < getScreenWidth() - getWidth()) {
             setX(getX() + velocidade);  // move 10 units to the right
         }
     }

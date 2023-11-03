@@ -32,7 +32,8 @@ public class SpaceInvaders extends JFrame {
     private JComboBox<String> dificuldade;
 
     public SpaceInvaders() {
-        sons = new Sons();
+        sons = Sons.getInstance();
+        sons.tocarMusica("sounds/spaceinvaders1.wav");
         fundo = new Fundo();
 
         highScoreLabel = new JLabel();
@@ -156,15 +157,10 @@ public class SpaceInvaders extends JFrame {
 
     public void iniciarJogo() {
         String dificuldade = this.dificuldade.getSelectedItem().toString();
-        JFrame janela = new JFrame("Space Invaders");
-        janela.setTitle("Space Invaders");
-        janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        janela.setSize(getSize());
-        janela.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        janela.setUndecorated(true);
-        janela.add(new Gameplay(dificuldade));
-        janela.setVisible(true);
-        setVisible(false);
+        Gameplay gameplay = new Gameplay(dificuldade);
+        setContentPane(gameplay);
+        gameplay.setVisible(true);
+        gameplay.requestFocusInWindow();
         sons.tocarMusica("sounds/spaceinvaders1.wav");
     }
 

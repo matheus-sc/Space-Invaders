@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -20,8 +21,10 @@ import java.util.Random;
 import java.lang.NumberFormatException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class Gameplay extends JPanel implements KeyListener {
@@ -30,6 +33,7 @@ public class Gameplay extends JPanel implements KeyListener {
     private ArrayList<Alien> aliens;  // Criação do alien fraco
     private Sons sons;
     private JLabel scoreLabel, vidaLabel, timeLabel;
+    private JButton voltar;
     private int score, time;
     private Image win, lose;
     private boolean gameRunning;
@@ -37,6 +41,20 @@ public class Gameplay extends JPanel implements KeyListener {
 
     public Gameplay(String dificuldade) {
         gameRunning = true;
+
+        voltar = new JButton("Voltar");
+        voltar.setBounds(880, 800, 200, 30);
+        voltar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                voltarParaTelaInicial();
+            }
+        });
+        voltar.setFont(new Font("Arial", Font.BOLD, 16));
+        voltar.setForeground(Color.WHITE);
+        voltar.setBackground(Color.BLACK);
+        voltar.setFocusPainted(false);
+        voltar.setBorderPainted(false);
+
         formacaoAliens(dificuldade);
         scoreLabel = new JLabel("Score: " + score);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
@@ -51,7 +69,8 @@ public class Gameplay extends JPanel implements KeyListener {
         timeLabel.setFont(new Font("Arial", Font.BOLD, 16));
         timeLabel.setForeground(Color.WHITE);
 
-        sons = new Sons();
+        sons = Sons.getInstance();
+        sons.tocarMusica("sounds/spaceinvaders1.wav");
         setLayout(null);  // Layout do JPanel nulo
         
         fundo = new Fundo(); 
@@ -97,6 +116,7 @@ public class Gameplay extends JPanel implements KeyListener {
             disparoAliensTimer.stop();
             checaColisaoTimer.stop();
             timer.stop();
+            add(voltar);
         } else {
             player.draw(g);
             for (Nave alien : aliens) {
@@ -122,8 +142,10 @@ public class Gameplay extends JPanel implements KeyListener {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_SPACE:
-                if (player.atirar(10, 15, 500, "assets/TiroPlayer.png")) {
-                    sons.tocarSom("sounds/shoot.wav");
+                if (gameRunning) {
+                    if (player.atirar(10, 15, 500, "assets/TiroPlayer.png")) {
+                        sons.tocarSom("sounds/shoot.wav");
+                    }
                 }
                 break;
             case KeyEvent.VK_LEFT:
@@ -265,7 +287,7 @@ public class Gameplay extends JPanel implements KeyListener {
     }
 
     private boolean verificarDirecao(Nave alien, boolean direcaoAtual) {
-        return (alien.getX() >= alien.getFundoWidth() - alien.getWidth()) || (alien.getX() <= 0);
+        return (alien.getX() >= alien.getScreenWidth() - alien.getWidth()) || (alien.getX() <= 0);
     }
 
     ActionListener disparoAliens = new ActionListener() {
@@ -417,6 +439,19 @@ public class Gameplay extends JPanel implements KeyListener {
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
+    }
+
+    private void voltarParaTelaInicial() {      
+        sons.pararMusica();
+
+        Window janelaAtual = SwingUtilities.getWindowAncestor(this);
+        janelaAtual.dispose();        
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new SpaceInvaders();
+            }
+        });
     }
 
     // Métodos não utilizados, mas necessários para poder implementar o KeyListener

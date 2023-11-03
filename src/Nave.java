@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
 
@@ -12,14 +13,23 @@ import javax.imageio.ImageIO;
 public abstract class Nave {
     private int vida, x, y;
     private Image sprite;
-    private boolean podeAtirar = true;  // Variável para controlar a taxa de disparo do player
-    private Fundo fundo = new Fundo();
-    private ArrayList<Disparo> disparos = new ArrayList<>();  // Criação do ArrayList para os disparos do player
+    private boolean podeAtirar = true; // Variável para controlar a taxa de disparo do player
+
+    private ArrayList<Disparo> disparos = new ArrayList<>(); // Criação do ArrayList para os disparos do player
 
     public void draw(Graphics g) {
-        g.drawImage(getSprite(), x, y, null);
+        int screenWidth = getScreenWidth();
+        int screenHeight = getScreenHeight();
+
+        int screenX = x * screenWidth / getScreenWidth();
+        int screenY = y * screenHeight / getScreenHeight();
+        int width = getWidth() * screenWidth / getScreenWidth();
+        int height = getHeight() * screenHeight / getScreenHeight();
+
+        g.drawImage(getSprite(), screenX, screenY, width, height, null);
+
     }
-    
+
     public void setVida(int vida) {
         this.vida = vida;
     }
@@ -80,18 +90,19 @@ public abstract class Nave {
         return sprite.getHeight(null);
     }
 
-    public int getFundoWidth() {
-        return fundo.getWidth();
+    public int getScreenWidth() {
+        return Toolkit.getDefaultToolkit().getScreenSize().width;
     }
 
-    public int getFundoHeight() {
-        return fundo.getHeight();
+    public int getScreenHeight() {
+        return Toolkit.getDefaultToolkit().getScreenSize().height;
     }
 
     public boolean estaMorto() {
         if (vida <= 0) {
             return true;
-        } return false;
+        }
+        return false;
     }
 
     public abstract boolean atirar(int dano, int velocidade, int cooldown, String spriteTiroPath);

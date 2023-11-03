@@ -11,8 +11,13 @@ public class Player extends Nave {
         setVida(vida);  // Inicializa a vida do player
 
         setSprite("assets/Jogador.png");  // Inicializa o sprite do player
-        int playerX = (getFundoWidth() - getWidth()) / 2;
-        int playerY = getFundoHeight() - getHeight() - 50;
+        int screenWidth = getScreenWidth();
+        int screenHeight = getScreenHeight();
+        int playerWidth = getWidth();
+        int playerHeight = getHeight();
+    
+        int playerX = (screenWidth - playerWidth) / 2;
+        int playerY = screenHeight - playerHeight - 50;
         setX(playerX);
         setY(playerY);
     }
@@ -42,8 +47,10 @@ public class Player extends Nave {
     }
 
     public void moverDireita() {
-        if (getX() < getFundoWidth() - getWidth()) {
-            setX(getX() + 10);  // move 10 units to the right
+        int playerWidth = getWidth();
+        int screenWidth = getScreenWidth();
+        if (getX() < screenWidth - playerWidth) {
+            setX(getX() + 10);
         }
     }
 }
