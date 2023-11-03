@@ -9,14 +9,14 @@ import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
 
-// Interface para as naves do jogo (player e aliens)
+// Classe abstrata para as naves do jogo (player e alien)
 public abstract class Nave {
-    private int vida, x, y;
-    private Image sprite;
+    private int vida, x, y;  // Variáveis para a vida e posição da nave
+    private Image sprite;  // Variável para o sprite da nave
     private boolean podeAtirar = true; // Variável para controlar a taxa de disparo do player
+    private ArrayList<Disparo> disparos = new ArrayList<>(); // Lista de disparos da nave
 
-    private ArrayList<Disparo> disparos = new ArrayList<>(); // Criação do ArrayList para os disparos do player
-
+    // Método para desenhar a nave na tela
     public void draw(Graphics g) {
         int screenWidth = getScreenWidth();
         int screenHeight = getScreenHeight();
@@ -29,6 +29,8 @@ public abstract class Nave {
         g.drawImage(getSprite(), screenX, screenY, width, height, null);
 
     }
+
+    // Sets e gets
 
     public void setVida(int vida) {
         this.vida = vida;
@@ -98,6 +100,7 @@ public abstract class Nave {
         return Toolkit.getDefaultToolkit().getScreenSize().height;
     }
 
+    // Método para verificar se a nave está morta
     public boolean estaMorto() {
         if (vida <= 0) {
             return true;
@@ -105,6 +108,7 @@ public abstract class Nave {
         return false;
     }
 
+    // Métodos abstratos de movimentação e ataque
     public abstract boolean atirar(int dano, int velocidade, int cooldown, String spriteTiroPath);
 
     public abstract void moverEsquerda();
