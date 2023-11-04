@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -41,13 +42,19 @@ public class Gameplay extends JPanel implements KeyListener {
     private Image win, lose;  // Imagens de vitória e derrota
     private boolean gameRunning;  // Variável para saber se o jogo está rodando ou não
     private Timer movimentoAliensTimer, movimentoDisparoTimer, disparoAliensTimer, checaColisaoTimer, timer;  // Timers para movimentação dos aliens, disparo dos aliens, movimentação dos disparos, checagem de colisão e contagem do tempo de jogo
+    private Dimension screenSize;
+    private int screenWidth;
+    private int screenHeight;
 
     public Gameplay(String dificuldade) {
         gameRunning = true;  // Inicia o jogo como rodando
 
         setLayout(null);  // Layout do JPanel nulo
         
-        fundo = new Fundo();  // Criação do fundo 
+        fundo = new Fundo();  // Criação do fundo
+        screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        screenWidth = (int) screenSize.getWidth();
+        screenHeight = (int) screenSize.getHeight();
 
         // Carregamento da fonte
         try {
@@ -66,7 +73,14 @@ public class Gameplay extends JPanel implements KeyListener {
 
         // Inicia o botão de voltar, o posiciona e adiciona um ActionListener para voltar para a tela inicial
         voltar = new JButton("Voltar");
-        voltar.setBounds(880, 800, 200, 30);
+
+        // Define a posição e o tamanho do botão "Voltar" de acordo com as dimensões da tela
+        int buttonWidth = 200;
+        int buttonHeight = 30;
+        int buttonX = (screenWidth - buttonWidth) / 2;  // Centraliza horizontalmente
+        int buttonY = (int) (screenHeight * 0.9);  // Coloca perto da parte inferior da tela
+
+        voltar.setBounds(buttonX, buttonY, buttonWidth, buttonHeight);
         voltar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 voltarParaTelaInicial();
@@ -84,13 +98,16 @@ public class Gameplay extends JPanel implements KeyListener {
         scoreLabel = new JLabel("Score: " + score);
         scoreLabel.setFont(space_invaders);
         scoreLabel.setForeground(Color.WHITE);
-        scoreLabel.setBounds(10, 10, 300, 20);
+        int scoreLabelX = (int) (screenWidth * 0.02); // Ajuste a posição horizontal conforme necessário
+        int scoreLabelY = (int) (screenHeight * 0.02);  // Ajuste a posição vertical conforme necessário
+        scoreLabel.setBounds(scoreLabelX, scoreLabelY, 300, 20);
         add(scoreLabel);
 
         // Inicia o JLabel do tempo de jogo, o posiciona e o adiciona ao JPanel
-        time = 0;
         timeLabel = new JLabel("Time: 0s");
-        timeLabel.setBounds(10, 50, 300, 30); // Adjust the position and size as needed
+        int timeLabelX = (int) (screenWidth * 0.02);  // Ajuste a posição horizontal conforme necessário
+        int timeLabelY = (int) (screenHeight * 0.06);  // Ajuste a posição vertical conforme necessário
+        timeLabel.setBounds(timeLabelX, timeLabelY, 300, 30);
         add(timeLabel);
         timeLabel.setFont(space_invaders);
         timeLabel.setForeground(Color.WHITE);
@@ -99,15 +116,17 @@ public class Gameplay extends JPanel implements KeyListener {
         player = new Player(100);
         vidaLabel = new JLabel("Vida: " + player.getVida());
         vidaLabel.setFont(space_invaders);
-        vidaLabel.setForeground(Color.WHITE);   
-        vidaLabel.setBounds(11, 33, 300, 20);
+        vidaLabel.setForeground(Color.WHITE);
+        int vidaLabelX = (int) (screenWidth * 0.02);  // Ajuste a posição horizontal conforme necessário
+        int vidaLabelY = (int) (screenHeight * 0.04);  // Ajuste a posição vertical conforme necessário
+        vidaLabel.setBounds(vidaLabelX, vidaLabelY, 300, 20);
         add(vidaLabel);
 
         addKeyListener(this); // Adiciona o KeyListener ao JPanel para capturar os eventos de teclado
         setFocusable(true);  // Faz o JPanel focável para poder capturar os eventos de teclado
 
         // Inicia e começa o timer para contar o tempo de jogo
-        timer = new Timer(1000, new ActionListener() {
+        timer = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 time++;
@@ -120,7 +139,7 @@ public class Gameplay extends JPanel implements KeyListener {
         movimentoAliensTimer = new Timer(100, movimentoAliens);
         movimentoDisparoTimer = new Timer(100, movimentoDisparo);
         disparoAliensTimer = new Timer(1000, disparoAliens);
-        checaColisaoTimer = new Timer(10, checaColisao);
+        checaColisaoTimer = new Timer(100, checaColisao);
 
         movimentoAliensTimer.start();
         movimentoDisparoTimer.start();
@@ -140,6 +159,15 @@ public class Gameplay extends JPanel implements KeyListener {
             disparoAliensTimer.stop();
             checaColisaoTimer.stop();
             timer.stop();
+            if (player.estaMorto()) {
+                int loseX = (screenWidth - 800) / 2;  // Centraliza horizontalmente
+                int loseY = (screenHeight - 600) / 2;  // Centraliza verticalmente
+                g.drawImage(lose, loseX, loseY, 800, 600, null);
+            } else {
+                int winX = (screenWidth - 800) / 2;  // Centraliza horizontalmente
+                int winY = (screenHeight - 600) / 2;  // Centraliza verticalmente
+                g.drawImage(win, winX, winY, 800, 600, null);
+            }
             add(voltar);
         } else {
             player.draw(g);
@@ -155,12 +183,7 @@ public class Gameplay extends JPanel implements KeyListener {
                 }
             }
         }
-        // Se o player estiver morto ou se não houverem mais aliens, desenha a imagem de vitória ou derrota
-        if (player.estaMorto()) g.drawImage(lose, 570, 270, 800, 600, null);
-        else if (aliens.isEmpty()) g.drawImage(win, 570, 270, 800, 600, null);
-        // Faz o JPanel ser redesenhado e revalidado, garantindo que os componentes sejam desenhados corretamente
         repaint();
-        revalidate();
     }
 
     // Método para capturar os eventos de teclado (seta esquerda, seta direita e espaço)
@@ -187,7 +210,6 @@ public class Gameplay extends JPanel implements KeyListener {
         }
         // Redesenha e revalida o JPanel para garantir que os componentes sejam desenhados corretamente
         repaint();
-        revalidate();
     }
 
     // ActionListener para checar a colisão
@@ -199,9 +221,9 @@ public class Gameplay extends JPanel implements KeyListener {
                 ArrayList<Disparo> disparosRemover = new ArrayList<>();
                 ArrayList<Alien> aliensRemover = new ArrayList<>();
 
-                // Checa se algum disparo do player colidiu com algum alien
+                // Checa se algum disparo do player colidiu com algum alien ou se saiu da tela
                 for (Disparo disparo : player.getDisparos()) {
-                    if (disparo.seColidiu(aliens)) {
+                    if (disparo.seColidiu(aliens) || disparo.getY() >= screenHeight) {
                         disparosRemover.add(disparo);
                         for (Alien alien : aliens) {
                             if (alien.estaMorto()) {
@@ -222,10 +244,10 @@ public class Gameplay extends JPanel implements KeyListener {
                         break;
                     }
                 }
-                // Checa se algum disparo do alien colidiu com o player
+                // Checa se algum disparo do alien colidiu com o player ou se saiu da tela
                 for (Alien alien : aliens) {
                     for (Disparo disparo : alien.getDisparos()) {
-                        if (disparo.seColidiu(player)) {
+                        if (disparo.seColidiu(player) || disparo.getY() >= screenHeight ) {
                             disparosRemover.add(disparo);
                             // Se o disparo se colidiu, verifica e troca o sprite do player de acordo com a vida
                             if (player.getVida() <= 30) player.setSprite("assets/JogadorDano2.png");
@@ -257,7 +279,7 @@ public class Gameplay extends JPanel implements KeyListener {
                     File fileLose = new File("assets/GameOver.png");
                     lose = ImageIO.read(fileLose);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("Erro ao carregar derrota!");
                 }
                 
                 salvarScore();
@@ -477,7 +499,7 @@ public class Gameplay extends JPanel implements KeyListener {
                 writer.close();
             }
         } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao salvar pontuação!");
         }
     }
 

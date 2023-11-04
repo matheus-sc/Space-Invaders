@@ -36,7 +36,7 @@ public class Sons {
             clip.open(audioIn);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao carregar música!");
         }
     }
 
@@ -50,12 +50,8 @@ public class Sons {
             
             clip.open(audioIn);
             clip.start();
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
+        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+            System.out.println("Erro ao carregar som!");
         }
     }
 

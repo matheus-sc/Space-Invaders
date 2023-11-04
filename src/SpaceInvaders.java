@@ -43,7 +43,9 @@ public class SpaceInvaders extends JFrame {
             File fileLogo = new File("assets/Logo.png");
             logo = ImageIO.read(fileLogo);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao carregar logo!");
+        } catch (Exception e) {
+            System.out.println("Erro inesperado!");
         }
 
         // Carregamento da fonte
@@ -148,7 +150,7 @@ public class SpaceInvaders extends JFrame {
                 highScoreLabel.setText("High Score: 0");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao ler o arquivo de pontuação!");
         }
 
         // Adiciona um ActionListener ao JButton com o método iniciarJogo()

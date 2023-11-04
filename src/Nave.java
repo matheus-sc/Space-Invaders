@@ -44,7 +44,7 @@ public abstract class Nave {
         try {
             this.sprite = ImageIO.read(new File(caminho));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao carregar nave!");
         }
     }
 

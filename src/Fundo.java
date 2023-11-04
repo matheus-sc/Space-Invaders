@@ -19,7 +19,7 @@ public class Fundo {
             // Carrega o sprite do fundo
             sprite = ImageIO.read(new File("assets/Fundo.png"));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao carregar o fundo!");
         }
 
         // Obtém o tamanho da tela em tempo de execução
