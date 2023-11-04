@@ -3,6 +3,7 @@ package src;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class Disparo {
                 return true;
             }
         }
-        if (getY() < 0) {
+        if (getY() <= 0) {
             return true;
         }
         return false;
@@ -84,6 +85,9 @@ public class Disparo {
         Rectangle hitboxPlayer = new Rectangle(player.getX(), player.getY(), player.getWidth(), player.getHeight());
         if (disparo.intersects(hitboxPlayer)) {
             player.setVida(player.getVida() - getDano());
+            return true;
+        }
+        if (getY() >= Toolkit.getDefaultToolkit().getScreenSize().getHeight()) {
             return true;
         }
         return false;

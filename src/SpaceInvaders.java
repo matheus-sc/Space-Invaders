@@ -23,39 +23,30 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class SpaceInvaders extends JFrame {
-    private JButton iniciar;
-    private JLabel highScoreLabel;
-    private Image logo;
-    private Font space_invaders;
-    private Sons sons;
-    private Fundo fundo;
-    private JComboBox<String> dificuldade;
+    private JButton iniciar;  // JButton para poder iniciar o jogo
+    private JLabel highScoreLabel;  // JLabel para poder mostrar o highscore
+    private JComboBox<String> dificuldade;  // JComboBox para poder escolher a dificuldade
+    private Image logo;  // Imagem do logo do jogo
+    private Font space_invaders;  // Fonte do jogo
+    private Sons sons;  // Sons do jogo
+    private Fundo fundo;  // Fundo do jogo
 
     public SpaceInvaders() {
+        // Inicia a música na tela inicial
         sons = Sons.getInstance();
         sons.tocarMusica("sounds/spaceinvaders1.wav");
-        fundo = new Fundo();
+        
+        fundo = new Fundo();  // Inicia o fundo
 
-        highScoreLabel = new JLabel();
-        highScoreLabel.setBounds(10, 10, 200, 30); // Adjust the position and size as needed
-        getContentPane().add(highScoreLabel);
-
+        // Inicia o JComboBox e o posiciona
         try {
             File fileLogo = new File("assets/Logo.png");
             logo = ImageIO.read(fileLogo);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao carregar logo!");
+        } catch (Exception e) {
+            System.out.println("Erro inesperado!");
         }
-        setTitle("Space Invaders");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().setLayout(null);
-
-        // Obtém o tamanho da tela em tempo de execução
-        Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-
-        // Define o tamanho da janela de acordo com a tela
-        setSize(screenSize);
-        setLocationRelativeTo(null);
 
         // Carregamento da fonte
         try {
@@ -68,6 +59,19 @@ public class SpaceInvaders extends JFrame {
             System.out.println("Erro inesperado!");
         }
 
+        // Faz o comportamento da janela (título, ação ao fechar e layout)
+        setTitle("Space Invaders");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+
+        // Obtém o tamanho da tela em tempo de execução
+        Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Define o tamanho da janela de acordo com a tela
+        setSize(screenSize);
+        setLocationRelativeTo(null);
+
+        // Cria um JPanel para poder adicionar os componentes
         JPanel contentPane = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -79,17 +83,18 @@ public class SpaceInvaders extends JFrame {
                 int logoHeight = (int) (logoWidth * logo.getHeight(null) / logo.getWidth(null));
                 int logoX = (screenSize.width - logoWidth) / 2;
                 int logoY = (screenSize.height - logoHeight) / 2;
-
                 g.drawImage(logo, logoX, logoY, logoWidth, logoHeight, null);
 
+                // Redimensione o botão de acordo com o tamanho da tela
                 int buttonWidth = 300;
                 int buttonHeight = 30;
                 int buttonX = (screenSize.width - buttonWidth) / 2;
                 int buttonY = logoY + logoHeight + 50;
                 iniciar.setBounds(buttonX, buttonY, buttonWidth, buttonHeight);
 
-                highScoreLabel.setBounds(10, 10, 600, 30); // Adjust the position and size as needed
+                highScoreLabel.setBounds(10, 10, 600, 30);
 
+                // Redimensione o JComboBox de acordo com o tamanho da tela
                 int comboBoxWidth = 200;
                 int comboBoxHeight = 50;
                 int comboBoxX = (screenSize.width - comboBoxWidth) / 2;
@@ -99,9 +104,22 @@ public class SpaceInvaders extends JFrame {
             }
         };
 
+        // Define o JPanel como o contentPane
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
+        // Inicia o JComboBox e o adiciona ao JPanel
+        dificuldade = new JComboBox<>();
+        dificuldade.addItem("Fácil");
+        dificuldade.addItem("Médio");
+        dificuldade.addItem("Difícil");
+        dificuldade.setFont(space_invaders);
+        dificuldade.setForeground(Color.RED);
+        dificuldade.setBackground(Color.YELLOW);
+        dificuldade.setFocusable(false);
+        contentPane.add(dificuldade);
+
+        // Inicia o JButton e o adiciona ao JPanel
         iniciar = new JButton("INICIAR");
         iniciar.setFont(space_invaders);
         iniciar.setForeground(Color.RED);
@@ -109,6 +127,7 @@ public class SpaceInvaders extends JFrame {
         iniciar.setFocusPainted(false);
         contentPane.add(iniciar);
 
+        // Inicia o highscore e o adiciona ao JPanel
         highScoreLabel = new JLabel();
         highScoreLabel.setFont(space_invaders);
         highScoreLabel.setForeground(Color.RED);
@@ -116,6 +135,7 @@ public class SpaceInvaders extends JFrame {
         highScoreLabel.setFocusable(false);
         contentPane.add(highScoreLabel);
 
+        // Obtém o highscore do arquivo highscore.txt. Se não existir, o highscore é 0
         try {
             File fileScore = new File("highscore.txt");
             if (fileScore.exists()) {
@@ -130,31 +150,25 @@ public class SpaceInvaders extends JFrame {
                 highScoreLabel.setText("High Score: 0");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao ler o arquivo de pontuação!");
         }
 
-        dificuldade = new JComboBox<>();
-        dificuldade.addItem("Fácil");
-        dificuldade.addItem("Médio");
-        dificuldade.addItem("Difícil");
-        dificuldade.setFont(space_invaders);
-        dificuldade.setForeground(Color.RED);
-        dificuldade.setBackground(Color.YELLOW);
-        dificuldade.setFocusable(false);
-        contentPane.add(dificuldade);
-
+        // Adiciona um ActionListener ao JButton com o método iniciarJogo()
         iniciar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 iniciarJogo();
             }
         });
 
+        // Define a janela como maximizada e sem bordas
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setUndecorated(true);
         setVisible(true);
-        sons.tocarMusica("sounds/spaceinvaders1.wav");
+
+        sons.tocarMusica("sounds/spaceinvaders1.wav"); // Toca a música
     }
 
+    // Método para iniciar o jogo, criando um novo Gameplay e definindo-o como o contentPane
     public void iniciarJogo() {
         String dificuldade = this.dificuldade.getSelectedItem().toString();
         Gameplay gameplay = new Gameplay(dificuldade);
@@ -164,6 +178,7 @@ public class SpaceInvaders extends JFrame {
         sons.tocarMusica("sounds/spaceinvaders1.wav");
     }
 
+    // Main para iniciar o jogo
     public static void main(String[] args) {
         new SpaceInvaders();
     }

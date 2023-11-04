@@ -8,17 +8,18 @@ import java.awt.Dimension;
 
 import javax.imageio.ImageIO;
 
+// Classe para o fundo do jogo
 public class Fundo {
-    private Image sprite;
-    private int screenWidth;
-    private int screenHeight;
+    private Image sprite;  // Variável para o sprite do fundo
+    private int screenWidth;  // Variável para a largura da tela
+    private int screenHeight;  // Variável para a altura da tela
 
     public Fundo() {
         try {
             // Carrega o sprite do fundo
             sprite = ImageIO.read(new File("assets/Fundo.png"));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao carregar o fundo!");
         }
 
         // Obtém o tamanho da tela em tempo de execução

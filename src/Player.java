@@ -5,12 +5,15 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+// Classe Player que herda de Nave
 public class Player extends Nave {
 
     public Player(int vida) {
         setVida(vida);  // Inicializa a vida do player
 
         setSprite("assets/Jogador.png");  // Inicializa o sprite do player
+
+        // Obtém o tamanho da tela em tempo de execução para centralizar o player
         int screenWidth = getScreenWidth();
         int screenHeight = getScreenHeight();
         int playerWidth = getWidth();
@@ -22,8 +25,9 @@ public class Player extends Nave {
         setY(playerY);
     }
 
+    // Método para atirar
     public boolean atirar(int dano, int velocidade, int cooldown, String spriteTiroPath) {
-        if (!getPodeAtirar()) {
+        if (!getPodeAtirar()) {  // Se o atributo podeAtirar for falso, retorna falso
             return false;
         }
 
@@ -40,6 +44,7 @@ public class Player extends Nave {
         return true;
     }
 
+    // Métodos de movimentação
     public void moverEsquerda() {
         if (getX() > 0) {
             setX(getX() - 10);

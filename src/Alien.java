@@ -5,15 +5,18 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+// Classe abstrata para os aliens
 public abstract class Alien extends Nave {
-    private int velocidade;
+    private int velocidade;  // Velocidade do alien
 
+    // Método para setar a velocidade do alien
     public void setVelocidade(int velocidade) {
         this.velocidade = velocidade;
     }
 
+    // Método para o disparo do Alien
     public boolean atirar(int dano, int velocidade, int cooldown, String spriteTiroPath) {
-        if (!getPodeAtirar()) {
+        if (!getPodeAtirar()) {  // Se o atributo podeAtirar for falso, retorna falso
             return false;
         }
 
@@ -30,6 +33,7 @@ public abstract class Alien extends Nave {
         return true;
     }
 
+    // Métodos de movimentação (utilizam a velocidade do alien em questão)
     public void moverEsquerda() {
         if (getX() > 0) {
             setX(getX() - velocidade);
