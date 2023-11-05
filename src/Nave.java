@@ -14,7 +14,7 @@ public abstract class Nave {
     private int vida, x, y;  // Variáveis para a vida e posição da nave
     private Image sprite;  // Variável para o sprite da nave
     private boolean podeAtirar = true; // Variável para controlar a taxa de disparo do player
-    private ArrayList<Disparo> disparos = new ArrayList<>(); // Lista de disparos da nave
+    private ArrayList<Disparo> disparos = new ArrayList<>(); // ArrayList de disparos da nave
 
     // Método para desenhar a nave na tela
     public void draw(Graphics g) {
