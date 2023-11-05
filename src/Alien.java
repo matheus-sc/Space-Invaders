@@ -28,6 +28,7 @@ public abstract class Alien extends Nave {
                 setPodeAtirar(true);
             }
         });
+        timer.setRepeats(false);
         timer.start();
         return true;
     }

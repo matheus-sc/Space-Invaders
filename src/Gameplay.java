@@ -157,6 +157,15 @@ public class Gameplay extends JPanel implements KeyListener {
             disparoAliensTimer.stop();
             checaColisaoTimer.stop();
             timer.stop();
+            if (player.estaMorto()) {
+                int loseX = (screenWidth - 800) / 2;  // Centraliza horizontalmente
+                int loseY = (screenHeight - 600) / 2;  // Centraliza verticalmente
+                g.drawImage(lose, loseX, loseY, 800, 600, null);
+            } else if (aliens.isEmpty()) {
+                int winX = (screenWidth - 800) / 2;  // Centraliza horizontalmente
+                int winY = (screenHeight - 600) / 2;  // Centraliza verticalmente
+                g.drawImage(win, winX, winY, 800, 600, null);
+            }
             add(voltar);
         } else {
             player.draw(g);
@@ -173,16 +182,6 @@ public class Gameplay extends JPanel implements KeyListener {
             }
         }
 
-    // Se o jogador estiver morto ou se não houverem mais aliens, desenhe a imagem de vitória ou derrota no centro da tela
-        if (player.estaMorto()) {
-            int loseX = (screenWidth - 800) / 2;  // Centraliza horizontalmente
-            int loseY = (screenHeight - 600) / 2;  // Centraliza verticalmente
-            g.drawImage(lose, loseX, loseY, 800, 600, null);
-        } else if (aliens.isEmpty()) {
-            int winX = (screenWidth - 800) / 2;  // Centraliza horizontalmente
-            int winY = (screenHeight - 600) / 2;  // Centraliza verticalmente
-            g.drawImage(win, winX, winY, 800, 600, null);
-        }
         repaint();
         revalidate();
     }
