@@ -2,7 +2,6 @@ package src;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.File;
 import java.io.IOException;
 import java.awt.Dimension;
 
@@ -17,7 +16,7 @@ public class Fundo {
     public Fundo() {
         try {
             // Carrega o sprite do fundo
-            sprite = ImageIO.read(new File("assets/Fundo.png"));
+            sprite = ImageIO.read(getClass().getResource("/assets/Fundo.png"));
         } catch (IOException e) {
             System.out.println("Erro ao carregar o fundo!");
         }

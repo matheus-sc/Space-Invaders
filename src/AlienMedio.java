@@ -8,11 +8,11 @@ public class AlienMedio extends Alien {
         setVida(20);
         setVelocidade(10);
 
-       setSprite("assets/AlienMedio.png");
+       setSprite("/assets/AlienMedio.png");
     }
 
     // Método para checar se sofreu dano e alterar o sprite
     public void sofreuDano() {
-        if (getVida() < 20) setSprite("assets/AlienMedioDano.png");
+        if (getVida() < 20) setSprite("/assets/AlienMedioDano.png");
     }
 }

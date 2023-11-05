@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -27,7 +26,7 @@ public class Disparo {
 
         // Carrega o sprite do disparo
         try {
-            sprite = ImageIO.read(new File(spritePath));
+            sprite = ImageIO.read(getClass().getResource(spritePath));
         } catch (IOException e) {
             e.printStackTrace();
         }

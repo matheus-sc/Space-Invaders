@@ -2,7 +2,6 @@ package src;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.Toolkit;
@@ -42,7 +41,7 @@ public abstract class Nave {
 
     public void setSprite(String caminho) {
         try {
-            this.sprite = ImageIO.read(new File(caminho));
+            this.sprite = ImageIO.read(getClass().getResource(caminho));
         } catch (IOException e) {
             System.out.println("Erro ao carregar nave!");
         }

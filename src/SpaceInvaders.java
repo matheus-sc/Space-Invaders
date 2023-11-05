@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class SpaceInvaders extends JFrame {
     private JButton iniciar;  // JButton para poder iniciar o jogo
@@ -34,14 +35,13 @@ public class SpaceInvaders extends JFrame {
     public SpaceInvaders() {
         // Inicia a música na tela inicial
         sons = Sons.getInstance();
-        sons.tocarMusica("sounds/spaceinvaders1.wav");
+        sons.tocarMusica("/sounds/spaceinvaders1.wav");
         
         fundo = new Fundo();  // Inicia o fundo
 
         // Inicia o JComboBox e o posiciona
         try {
-            File fileLogo = new File("assets/Logo.png");
-            logo = ImageIO.read(fileLogo);
+            logo = ImageIO.read(getClass().getResource("/assets/Logo.png"));
         } catch (IOException e) {
             System.out.println("Erro ao carregar logo!");
         } catch (Exception e) {
@@ -50,11 +50,14 @@ public class SpaceInvaders extends JFrame {
 
         // Carregamento da fonte
         try {
-            space_invaders = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/SpaceFont.ttf")).deriveFont(20f);
+            InputStream fontStream1 = getClass().getResourceAsStream("/fonts/SpaceFont.ttf");
+            space_invaders = Font.createFont(Font.TRUETYPE_FONT, fontStream1).deriveFont(20f);
+            InputStream fontStream2 = getClass().getResourceAsStream("/fonts/SpaceFont.ttf");
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fonts/SpaceFont.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, fontStream2));
         } catch (FontFormatException | IOException e) {
             System.out.println("Erro ao carregar fontes!");
+            e.printStackTrace();
         } catch (Exception e) {
             System.out.println("Erro inesperado!");
         }
@@ -165,7 +168,7 @@ public class SpaceInvaders extends JFrame {
         setUndecorated(true);
         setVisible(true);
 
-        sons.tocarMusica("sounds/spaceinvaders1.wav"); // Toca a música
+        sons.tocarMusica("/sounds/spaceinvaders1.wav"); // Toca a música
     }
 
     // Método para iniciar o jogo, criando um novo Gameplay e definindo-o como o contentPane
@@ -175,7 +178,7 @@ public class SpaceInvaders extends JFrame {
         setContentPane(gameplay);
         gameplay.setVisible(true);
         gameplay.requestFocusInWindow();
-        sons.tocarMusica("sounds/spaceinvaders1.wav");
+        sons.tocarMusica("/sounds/spaceinvaders1.wav");
     }
 
     // Main para iniciar o jogo

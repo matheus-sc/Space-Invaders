@@ -11,7 +11,7 @@ public class Player extends Nave {
     public Player(int vida) {
         setVida(vida);  // Inicializa a vida do player
 
-        setSprite("assets/Jogador.png");  // Inicializa o sprite do player
+        setSprite("/assets/Jogador.png");  // Inicializa o sprite do player
 
         // Obtém o tamanho da tela em tempo de execução para centralizar o player
         int screenWidth = getScreenWidth();

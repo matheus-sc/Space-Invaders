@@ -1,7 +1,7 @@
 package src;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -30,8 +30,8 @@ public class Sons {
             if (clip != null && clip.isRunning()) {
                 clip.stop();
             }
-            File soundFile = new File(caminho);
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
+            URL soundURL = getClass().getResource(caminho);
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundURL);
             clip = AudioSystem.getClip();
             clip.open(audioIn);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -43,8 +43,8 @@ public class Sons {
     // Método para tocar som
     public void tocarSom(String caminho) {
         try {
-            File soundFile = new File(caminho); // your shoot sound file here
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
+            URL soundURL = getClass().getResource(caminho);
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundURL);
             
             Clip clip = AudioSystem.getClip();
             

@@ -8,6 +8,6 @@ public class AlienFraco extends Alien {
         setVida(10);
         setVelocidade(5);
 
-       setSprite("assets/AlienFraco.png");
+       setSprite("/assets/AlienFraco.png");
     }
 }

@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.lang.NumberFormatException;
@@ -56,9 +57,11 @@ public class Gameplay extends JPanel implements KeyListener {
 
         // Carregamento da fonte
         try {
-            space_invaders = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/SpaceFont.ttf")).deriveFont(10f);
+            InputStream fontStream1 = getClass().getResourceAsStream("/fonts/SpaceFont.ttf");
+            space_invaders = Font.createFont(Font.TRUETYPE_FONT, fontStream1).deriveFont(10f);
+            InputStream fontStream2 = getClass().getResourceAsStream("/fonts/SpaceFont.ttf");
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fonts/SpaceFont.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, fontStream2));
         } catch (FontFormatException | IOException e) {
             System.out.println("Erro ao carregar fontes!");
         } catch (Exception e) {
@@ -67,7 +70,7 @@ public class Gameplay extends JPanel implements KeyListener {
 
         // Inicia o objeto sons e toca a música do jogo
         sons = Sons.getInstance();
-        sons.tocarMusica("sounds/spaceinvaders1.wav");
+        sons.tocarMusica("/sounds/spaceinvaders1.wav");
 
         // Inicia o botão de voltar, o posiciona e adiciona um ActionListener para voltar para a tela inicial
         voltar = new JButton("Voltar");
@@ -193,8 +196,8 @@ public class Gameplay extends JPanel implements KeyListener {
             case KeyEvent.VK_SPACE:
                 // Faz com que o player atire apenas enquanto o jogo estiver rodando
                 if (gameRunning) {
-                    if (player.atirar(10, 15, 500, "assets/TiroPlayer.png")) {
-                        sons.tocarSom("sounds/shoot.wav");
+                    if (player.atirar(10, 15, 500, "/assets/TiroPlayer.png")) {
+                        sons.tocarSom("/sounds/shoot.wav");
                     }
                 }
                 break;
@@ -233,7 +236,7 @@ public class Gameplay extends JPanel implements KeyListener {
                                 else if (alien instanceof AlienMedio) score += 250;
                                 else if (alien instanceof AlienForte) score += 500;
                                 aliensRemover.add(alien);
-                                sons.tocarSom("sounds/invaderkilled.wav");
+                                sons.tocarSom("/sounds/invaderkilled.wav");
                             }
                             // Se o disparo se colidiu, verifica e troca o sprite do alien médio ou forte de acordo com a vida
                             if (alien instanceof AlienMedio) {
@@ -251,8 +254,8 @@ public class Gameplay extends JPanel implements KeyListener {
                         if (disparo.seColidiu(player)) {
                             disparosRemover.add(disparo);
                             // Se o disparo se colidiu, verifica e troca o sprite do player de acordo com a vida
-                            if (player.getVida() <= 30) player.setSprite("assets/JogadorDano2.png");
-                            else if (player.getVida() < 60) player.setSprite("assets/JogadorDano1.png");
+                            if (player.getVida() <= 30) player.setSprite("/assets/JogadorDano2.png");
+                            else if (player.getVida() < 60) player.setSprite("/assets/JogadorDano1.png");
                         }
                     }
                     // Remove os disparos do alien que colidiram com o player
@@ -274,11 +277,10 @@ public class Gameplay extends JPanel implements KeyListener {
             }
             // Se o player estiver morto, mostra a imagem de derrota, salva o score e para o jogo
             else if (player.estaMorto()) {
-                sons.tocarSom("sounds/invaderkilled.wav");
+                sons.tocarSom("/sounds/invaderkilled.wav");
                 
                 try {
-                    File fileLose = new File("assets/GameOver.png");
-                    lose = ImageIO.read(fileLose);
+                    lose = ImageIO.read(getClass().getResourceAsStream("/assets/GameOver.png"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -289,8 +291,7 @@ public class Gameplay extends JPanel implements KeyListener {
             // Se não houverem mais aliens, mostra a imagem de vitória, salva o score e para o jogo
             } else {
                 try {
-                    File fileWin = new File("assets/YouWin.png");
-                    win = ImageIO.read(fileWin);
+                    win = ImageIO.read(getClass().getResourceAsStream("/assets/YouWin.png"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -373,20 +374,20 @@ public class Gameplay extends JPanel implements KeyListener {
                 if (alien instanceof AlienFraco) {
                     dano = 10;
                     velocidade = 25;
-                    spriteTiroPath = "assets/TiroFraco.png";
+                    spriteTiroPath = "/assets/TiroFraco.png";
                 } else if (alien instanceof AlienMedio) {
                     dano = 20;
                     velocidade = 30;
-                    spriteTiroPath = "assets/TiroMedio.png";
+                    spriteTiroPath = "/assets/TiroMedio.png";
                 } else {
                     dano = 30;
                     velocidade = 45;
-                    spriteTiroPath = "assets/TiroForte.png";
+                    spriteTiroPath = "/assets/TiroForte.png";
                 }
 
                 // Faz o alien atirar, tocando o som de disparo
                 if (alien.atirar(dano, velocidade, 1000, spriteTiroPath)) {
-                    sons.tocarSom("sounds/shoot.wav");
+                    sons.tocarSom("/sounds/shoot.wav");
                 }
             }
         }
